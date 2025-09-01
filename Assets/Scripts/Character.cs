@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json;
+using UnityEngine;
 
 public class Character : MonoBehaviour, ISavable
 {
@@ -8,6 +9,11 @@ public class Character : MonoBehaviour, ISavable
     public string SaveableId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     InputSystem_Actions _playerInput;
+    private readonly JsonSerializerSettings _settings = new()
+    {
+        TypeNameHandling = TypeNameHandling.Auto,
+        Formatting = Formatting.Indented
+    };
 
     [SerializeField] CharacterController _controller;
     [SerializeField] Animator _anim;
@@ -19,7 +25,7 @@ public class Character : MonoBehaviour, ISavable
         _playerInput.Enable();
         _movementComponent = new(1f);
 
-        _characterData = new();
+        _characterData = new("Gino", Vector3.zero, Quaternion.identity, Vector3.back, 1, 1);
         SaveSystemManager.RegisterSavable(this);
     }
 

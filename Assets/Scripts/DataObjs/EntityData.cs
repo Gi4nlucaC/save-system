@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class EntityData : ISavableData
 {
-    protected string _id;
-    protected string _name;
-    protected Vector3 _position;
-    protected Quaternion _rotation;
-    protected Vector3 _scale;
+    public string _id;
+    public string _name;
+    public Vector3 _position;
+    public Quaternion _rotation;
+    public Vector3 _scale;
 
-    public string SaveableId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    //public string SaveableId { get => ""; set => value; }
 
     public void DeleteData()
     {

@@ -37,7 +37,8 @@ public static class SaveSystemManager
 
         foreach (var item in _savableItems)
         {
-            stringBuilder.Append(item.SaveData());
+            var x = item.SaveData();
+            stringBuilder.Append(x);
         }
 
         _fileSaveStorage.Write(slotId, stringBuilder.ToString());
