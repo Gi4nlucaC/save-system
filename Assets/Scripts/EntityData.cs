@@ -15,14 +15,14 @@ public class EntityData : ISavableData
         throw new System.NotImplementedException();
     }
 
-    public void LoadData()
+    public ISavableData LoadData(string data)
     {
-        throw new System.NotImplementedException();
+        return JsonUtility.FromJson<ISavableData>(data);
     }
 
     public string SaveData()
     {
-        string data = "";
+        string data = JsonUtility.ToJson(this);
         return data;
     }
 }
