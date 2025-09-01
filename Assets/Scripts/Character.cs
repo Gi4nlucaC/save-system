@@ -18,6 +18,9 @@ public class Character : MonoBehaviour, ISavable
         _playerInput = new();
         _playerInput.Enable();
         _movementComponent = new(1f);
+
+        _characterData = new();
+        SaveSystemManager.RegisterSavable(this);
     }
 
     // Update is called once per frame

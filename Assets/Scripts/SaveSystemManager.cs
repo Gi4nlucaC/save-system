@@ -3,27 +3,35 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SaveSystemManager : MonoBehaviour
+public static class SaveSystemManager
 {
-    List<ISavable> _savableItems = new();
 
-    [SerializeField] Button _newGameButton;
+    static List<ISavable> _savableItems = new();
 
-    FileSaveStorage _fileSaveStorage;
+
+    static FileSaveStorage _fileSaveStorage;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static void Init()
     {
         _fileSaveStorage = new("Saves");
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void RegisterSavable(ISavable savable)
     {
-
+        if (savable != null && !_savableItems.Contains(savable))
+        {
+            _savableItems.Add(savable);
+        }
     }
 
-    void OnSaveData(string slotId)
+    public static void UnregisterSavable(ISavable savable)
+    {
+        _savableItems.Remove(savable);
+    }
+
+    public static void OnSaveData(string slotId)
     {
         StringBuilder stringBuilder = new();
 
@@ -33,15 +41,5 @@ public class SaveSystemManager : MonoBehaviour
         }
 
         _fileSaveStorage.Write(slotId, stringBuilder.ToString());
-    }
-
-    public void AddSavableItem(ISavable data)
-    {
-        _savableItems.Add(data);
-    }
-
-    public void RemoveSavableData(ISavable data)
-    {
-        _savableItems.Remove(data);
     }
 }
