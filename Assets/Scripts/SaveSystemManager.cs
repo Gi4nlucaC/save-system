@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SaveSystemManager : MonoBehaviour
 {
-    List<ISavableData> _savableItems = new();
+    List<ISavable> _savableItems = new();
+
+    [SerializeField] Button _newGameButton;
 
     FileSaveStorage _fileSaveStorage;
 
@@ -30,5 +33,15 @@ public class SaveSystemManager : MonoBehaviour
         }
 
         _fileSaveStorage.Write(slotId, stringBuilder.ToString());
+    }
+
+    public void AddSavableItem(ISavable data)
+    {
+        _savableItems.Add(data);
+    }
+
+    public void RemoveSavableData(ISavable data)
+    {
+        _savableItems.Remove(data);
     }
 }
