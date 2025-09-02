@@ -8,12 +8,16 @@ public class CharacterData : EntityData
     /// <summary>
     /// Constructor
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="name"></param>
     /// <param name="pos"></param>
     /// <param name="rot"></param>
-    public CharacterData(string name = "", Vector3 pos = new Vector3(), Quaternion rot = new Quaternion(), Vector3 scale = new Vector3(), int exp = 0, int lvl = 1)
+    /// <param name="scale"></param>
+    /// <param name="exp"></param>
+    /// <param name="lvl"></param>
+    public CharacterData(string id, string name = "", Vector3 pos = new Vector3(), Quaternion rot = new Quaternion(), Vector3 scale = new Vector3(), int exp = 0, int lvl = 1)
     {
-        _id = System.Guid.NewGuid().ToString();
+        this._id = id;
         this._name = name;
         this._position = new(pos);
         this._rotation = new(rot.eulerAngles);

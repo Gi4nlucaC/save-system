@@ -27,7 +27,7 @@ public class Character : MonoBehaviour, ISavable
         _playerInput.Enable();
         _movementComponent = new(1f);
 
-        _characterData = new("Gino", Vector3.zero, Quaternion.identity, Vector3.back, 1, 1);
+        _characterData = new(_persistentId.Value, "Gino", Vector3.zero, Quaternion.identity, Vector3.one, 1, 1);
 
         if (!string.IsNullOrEmpty(PersistentId))
             SaveSystemManager.RegisterSavable(this);

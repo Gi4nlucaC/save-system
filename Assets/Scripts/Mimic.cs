@@ -1,11 +1,19 @@
+using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
 
 public class Mimic : MonoBehaviour, ISavable
 {
     [SerializeField] private UniqueGUID _persistentId;
-    public string PersistentId => throw new System.NotImplementedException();
+    public string PersistentId => _persistentId != null && _persistentId.IsValid ? _persistentId.Value : null;
     MovementComponent _movementComponent;
+    EnemyData _enemyData;
+
+    private readonly JsonSerializerSettings _settings = new()
+    {
+        TypeNameHandling = TypeNameHandling.All,
+        Formatting = Formatting.Indented
+    };
 
     [Header("Random Movement")]
     [SerializeField] float minInterval = 0.6f;
@@ -18,10 +26,33 @@ public class Mimic : MonoBehaviour, ISavable
     {
         _movementComponent = new MovementComponent(1f);
     }
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        _enemyData = new(_persistentId.Value, "Mimic", transform.position, transform.rotation, transform.localScale, EnemyStates.IDLE);
+        
+        if (!string.IsNullOrEmpty(PersistentId))
+            SaveSystemManager.RegisterSavable(this);
+        else
+            Debug.LogWarning($"{name}: PersistentId non generato. Premi 'Generate' sul campo UniqueGUID o usa il context menu.");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        HandleMovement();
+    }
+
     void OnEnable()
     {
         _inputRoutine = StartCoroutine(RandomInputRoutine());
     }
+
+    void OnDisable()
+    {
+        StopCoroutine(_inputRoutine);
+    }
+
     IEnumerator RandomInputRoutine()
     {
         var wait = new WaitForSeconds(1f);
@@ -55,9 +86,14 @@ public class Mimic : MonoBehaviour, ISavable
         }
     }
 
+    void SnapshotData()
+    {
+        _enemyData.UpdateData(transform.position, transform.rotation, transform.localScale);
+    }
+
     public void DeleteData()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public ISavableData LoadData(string data)
@@ -67,18 +103,10 @@ public class Mimic : MonoBehaviour, ISavable
 
     public string SaveData()
     {
-        throw new System.NotImplementedException();
+        SnapshotData();
+
+        return JsonConvert.SerializeObject(_enemyData, _settings);
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        HandleMovement();
-    }
 }

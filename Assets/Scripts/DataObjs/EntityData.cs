@@ -8,4 +8,5 @@ public class EntityData
     public Vector3Data _position;
     public Vector3Data _rotation;
     public Vector3Data _scale;
+
 }
