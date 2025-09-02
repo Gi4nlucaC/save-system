@@ -8,6 +8,7 @@ public static class SaveSystemManager
 {
 
     static List<ISavable> _savableItems = new();
+    static List<EntityData> _savedEntities;
 
     static SaveStorage _saveStorage;
     static DataSerializer _dataSerializer;
@@ -56,6 +57,6 @@ public static class SaveSystemManager
     public static void OnLoadData(string slotId)
     {
         var loadedString = _saveStorage.ReadJson(slotId);
-        var x = _dataSerializer.Deserialize(loadedString);
+        _savedEntities = _dataSerializer.Deserialize(loadedString);
     }
 }
