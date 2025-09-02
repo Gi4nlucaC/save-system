@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class Character : MonoBehaviour, ISavable
 {
+    [SerializeField] private UniqueGUID _persistentId;
     CharacterData _characterData;
     MovementComponent _movementComponent;
 
-    public string SaveableId { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public string PersistentId => _persistentId != null && _persistentId.IsValid ? _persistentId.Value : null;
 
     InputSystem_Actions _playerInput;
     private readonly JsonSerializerSettings _settings = new()
@@ -18,6 +19,7 @@ public class Character : MonoBehaviour, ISavable
     [SerializeField] CharacterController _controller;
     [SerializeField] Animator _anim;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,7 +28,11 @@ public class Character : MonoBehaviour, ISavable
         _movementComponent = new(1f);
 
         _characterData = new("Gino", Vector3.zero, Quaternion.identity, Vector3.back, 1, 1);
-        SaveSystemManager.RegisterSavable(this);
+
+        if (!string.IsNullOrEmpty(PersistentId))
+            SaveSystemManager.RegisterSavable(this);
+        else
+            Debug.LogWarning($"{name}: PersistentId non generato. Premi 'Generate' sul campo UniqueGUID o usa il context menu.");
     }
 
     // Update is called once per frame
