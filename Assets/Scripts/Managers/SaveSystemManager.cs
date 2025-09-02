@@ -9,9 +9,8 @@ public static class SaveSystemManager
 
     static List<ISavable> _savableItems = new();
 
-
-    static FileSaveStorage _fileSaveStorage;
-    static JSONSerializer _jsonSerializer;
+    static SaveStorage _saveStorage;
+    static DataSerializer _dataSerializer;
 
     private static readonly JsonSerializerSettings _settings = new()
     {
@@ -19,12 +18,11 @@ public static class SaveSystemManager
         Formatting = Formatting.Indented
     };
 
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public static void Init()
     {
-        _fileSaveStorage = new("Saves");
-        _jsonSerializer = new();
+        _saveStorage = new("Saves");
+        _dataSerializer = new();
         OnLoadData("firstTest");
     }
 
@@ -52,12 +50,12 @@ public static class SaveSystemManager
             datas.Add(item.SaveData());
         }
 
-        _fileSaveStorage.Write(slotId, _jsonSerializer.Serialize(datas));
+        _saveStorage.Write(slotId, _dataSerializer.JsonSerialize(datas));
     }
 
     public static void OnLoadData(string slotId)
     {
-        var loadedString = _fileSaveStorage.Read(slotId);
-        var x = JsonConvert.DeserializeObject<List<EntityData>>(loadedString, _settings);
+        var loadedString = _saveStorage.ReadJson(slotId);
+        var x = _dataSerializer.Deserialize(loadedString);
     }
 }
