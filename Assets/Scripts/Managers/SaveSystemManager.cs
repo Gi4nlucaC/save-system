@@ -11,6 +11,7 @@ public static class SaveSystemManager
 
 
     static FileSaveStorage _fileSaveStorage;
+    static JSONSerializer _jsonSerializer;
 
     private static readonly JsonSerializerSettings _settings = new()
     {
@@ -23,6 +24,7 @@ public static class SaveSystemManager
     public static void Init()
     {
         _fileSaveStorage = new("Saves");
+        _jsonSerializer = new();
         OnLoadData("firstTest");
     }
 
@@ -41,20 +43,21 @@ public static class SaveSystemManager
 
     public static void OnSaveData(string slotId)
     {
-        StringBuilder stringBuilder = new();
+        List<EntityData> datas = new();
 
         foreach (var item in _savableItems)
         {
-            var x = item.SaveData();
-            stringBuilder.Append(x);
+            /* var x = item.SaveData();
+            stringBuilder.Append(x); */
+            datas.Add(item.SaveData());
         }
 
-        _fileSaveStorage.Write(slotId, stringBuilder.ToString());
+        _fileSaveStorage.Write(slotId, _jsonSerializer.Serialize(datas));
     }
 
     public static void OnLoadData(string slotId)
     {
         var loadedString = _fileSaveStorage.Read(slotId);
-        var x = JsonConvert.DeserializeObject<GameData>(loadedString, _settings);
+        var x = JsonConvert.DeserializeObject<List<EntityData>>(loadedString, _settings);
     }
 }

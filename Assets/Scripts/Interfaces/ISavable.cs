@@ -1,7 +1,7 @@
 public interface ISavable
 {
     string PersistentId { get; }
-    public string SaveData();
+    public EntityData SaveData();
 
     public ISavableData LoadData(string data);
 

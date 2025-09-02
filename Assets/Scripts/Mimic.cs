@@ -30,7 +30,7 @@ public class Mimic : MonoBehaviour, ISavable
     void Start()
     {
         _enemyData = new(_persistentId.Value, "Mimic", transform.position, transform.rotation, transform.localScale, EnemyStates.IDLE);
-        
+
         if (!string.IsNullOrEmpty(PersistentId))
             SaveSystemManager.RegisterSavable(this);
         else
@@ -101,11 +101,11 @@ public class Mimic : MonoBehaviour, ISavable
         throw new System.NotImplementedException();
     }
 
-    public string SaveData()
+    public EntityData SaveData()
     {
         SnapshotData();
 
-        return JsonConvert.SerializeObject(_enemyData, _settings);
+        return _enemyData;
     }
 
 

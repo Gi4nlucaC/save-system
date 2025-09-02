@@ -84,11 +84,11 @@ public class Character : MonoBehaviour, ISavable
         _characterData.UpdateData(transform.position, transform.rotation, transform.localScale);
     }
 
-    public string SaveData()
+    public EntityData SaveData()
     {
         SnapshotData();
 
-        return JsonConvert.SerializeObject(_characterData, _settings);
+        return _characterData;
     }
 
     public ISavableData LoadData(string data)

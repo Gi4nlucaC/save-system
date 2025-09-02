@@ -1,53 +1,52 @@
 {
-  "entities": [
+  "$type": "System.Collections.Generic.List`1[[EntityData, Assembly-CSharp]], mscorlib",
+  "$values": [
     {
-      "$type": "CharacterData, Assembly-CSharp",
-      "_exp": 1,
-      "_lvl": 1,
-      "_id": "94b73a38-8555-476d-87be-c347dd4e016b",
-      "_name": "Gino",
+      "$type": "EnemyData, Assembly-CSharp",
+      "_id": "7bef0fa2f6cb484dae34a5a39e8d1571",
+      "_name": "Mimic",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": 3.46162486,
+        "y": 0.0,
+        "z": -0.191957831
       },
       "_rotation": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 0,
-        "y": 180,
-        "z": 0
+        "x": 0.0,
+        "y": 222.899536,
+        "z": 0.0
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 1,
-        "y": 1,
-        "z": 1
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
       }
     },
     {
       "$type": "CharacterData, Assembly-CSharp",
       "_exp": 1,
       "_lvl": 1,
-      "_id": "94b73a38-8555-476d-87be-c347dd4e016b",
+      "_id": "6cba12f58293485196f1afe133b8b1f0",
       "_name": "Gino",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 0,
-        "y": 0,
-        "z": 0
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
       },
       "_rotation": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 0,
-        "y": 180,
-        "z": 0
+        "x": 0.0,
+        "y": 180.0,
+        "z": 0.0
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 1,
-        "y": 1,
-        "z": 1
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
       }
     }
   ]
