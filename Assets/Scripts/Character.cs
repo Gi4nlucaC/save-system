@@ -11,7 +11,7 @@ public class Character : MonoBehaviour, ISavable
     InputSystem_Actions _playerInput;
     private readonly JsonSerializerSettings _settings = new()
     {
-        TypeNameHandling = TypeNameHandling.Auto,
+        TypeNameHandling = TypeNameHandling.All,
         Formatting = Formatting.Indented
     };
 
@@ -82,7 +82,7 @@ public class Character : MonoBehaviour, ISavable
     {
         SnapshotData();
 
-        return JsonUtility.ToJson(_characterData);
+        return JsonConvert.SerializeObject(_characterData, _settings);
     }
 
     public ISavableData LoadData(string data)

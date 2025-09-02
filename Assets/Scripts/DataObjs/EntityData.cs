@@ -1,28 +1,11 @@
 using UnityEngine;
 
-public class EntityData : ISavableData
+[System.Serializable]
+public class EntityData
 {
     public string _id;
     public string _name;
-    public Vector3 _position;
-    public Quaternion _rotation;
-    public Vector3 _scale;
-
-    //public string SaveableId { get => ""; set => value; }
-
-    public void DeleteData()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public ISavableData LoadData(string data)
-    {
-        return JsonUtility.FromJson<ISavableData>(data);
-    }
-
-    public string SaveData()
-    {
-        string data = JsonUtility.ToJson(this);
-        return data;
-    }
+    public Vector3Data _position;
+    public Vector3Data _rotation;
+    public Vector3Data _scale;
 }
