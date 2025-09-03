@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Mimic : SavableMonoBehaviour
 {
+    [SerializeField] CharacterController _characterController;
     MovementComponent _movementComponent;
     EnemyData _enemyData;
 
@@ -63,7 +64,7 @@ public class Mimic : SavableMonoBehaviour
         Vector3 movement = _movementComponent.GetMovementVector(_currentInput, Time.deltaTime);
         if (movement.sqrMagnitude > 0f)
         {
-            transform.position += movement;
+            _characterController.Move(movement);
 
             // Rotazione opzionale verso direzione
             Vector3 flat = new(movement.x, 0f, movement.z);

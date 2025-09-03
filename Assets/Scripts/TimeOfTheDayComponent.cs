@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class TimeOfTheDayComponent : SavableMonoBehaviour, ISavable
+public class TimeOfTheDayComponent : SavableMonoBehaviour
 {
     [SerializeField] TMP_Text _dayText;
     [SerializeField] TMP_Text _timeText;
@@ -48,7 +48,7 @@ public class TimeOfTheDayComponent : SavableMonoBehaviour, ISavable
             }
         }
 
-        Debug.Log($"{currentDay} {hour:D2}:{minute:D2}");
+        //Debug.Log($"{currentDay} {hour:D2}:{minute:D2}");
         _dayText.text = currentDay.ToString();
         _timeText.text = $"{hour:D2}:{minute:D2}";
     }

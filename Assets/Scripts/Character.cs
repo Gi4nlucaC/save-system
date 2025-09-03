@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Character : SavableMonoBehaviour, ISavable
+public class Character : SavableMonoBehaviour
 {
     CharacterData _characterData;
     MovementComponent _movementComponent;
