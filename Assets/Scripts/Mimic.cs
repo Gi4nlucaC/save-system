@@ -1,10 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class Mimic : MonoBehaviour, ISavable
+public class Mimic : SavableMonoBehaviour, ISavable
 {
-    [SerializeField] private UniqueGUID _persistentId;
-    public string PersistentId => _persistentId != null && _persistentId.IsValid ? _persistentId.Value : null;
     MovementComponent _movementComponent;
     EnemyData _enemyData;
 
@@ -79,7 +77,7 @@ public class Mimic : MonoBehaviour, ISavable
         }
     }
 
-    void SnapshotData()
+    public void SnapshotData()
     {
         _enemyData.UpdateData(transform.position, transform.rotation, transform.localScale);
     }

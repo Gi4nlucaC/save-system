@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
-public class Character : MonoBehaviour, ISavable
+public class Character : SavableMonoBehaviour, ISavable
 {
-    [SerializeField] private UniqueGUID _persistentId;
     CharacterData _characterData;
     MovementComponent _movementComponent;
 
-    public string PersistentId => _persistentId != null && _persistentId.IsValid ? _persistentId.Value : null;
 
     InputSystem_Actions _playerInput;
 
@@ -73,7 +71,7 @@ public class Character : MonoBehaviour, ISavable
         _anim.Play(anim);
     }
 
-    void SnapshotData()
+    public void SnapshotData()
     {
         _characterData.UpdateData(transform.position, transform.rotation, transform.localScale);
     }
