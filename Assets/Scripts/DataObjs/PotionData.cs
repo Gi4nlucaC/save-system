@@ -1,9 +1,10 @@
 public class PotionData : PureRawData
 {
-    public float _newxSpawnTimer;
+    public float _nextSpawnTimer;
+    public int _healAmount;
 
     public void UpdateData(float spawnTimer)
     {
-        this._newxSpawnTimer = spawnTimer;
+        this._nextSpawnTimer = spawnTimer;
     }
 }

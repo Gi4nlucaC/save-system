@@ -1,32 +1,34 @@
+using System;
 using UnityEngine;
 
 public class PotionSpawner : SavableMonoBehaviour
 {
     [SerializeField] float _spawnTimer;
-    [SerializeField] GameObject _potionPrefab;
 
     PotionData _potionData;
     float _nextSpawnTimer;
+    Collider _collider;
 
     private void Start()
     {
         Initialize();
+
+        TryGetComponent<Collider>(out _collider);
     }
 
     private void Update()
     {
-        _nextSpawnTimer -= Time.deltaTime;
-        if (_nextSpawnTimer <= 0)
-        {
-            SpawnPotion();
-            _nextSpawnTimer = _spawnTimer;
-        }
+        if (_nextSpawnTimer > 0)
+            _nextSpawnTimer -= Time.deltaTime;
+        else
+            SpawnPotion(true);
+
     }
 
-    private void SpawnPotion()
+    private void SpawnPotion(bool shouldSpawn)
     {
-        if (transform.childCount == 0)
-            Instantiate(_potionPrefab, transform);
+        transform.GetChild(0).gameObject.SetActive(shouldSpawn);
+        _collider.enabled = shouldSpawn;
     }
 
     public override void LoadData()
@@ -34,14 +36,15 @@ public class PotionSpawner : SavableMonoBehaviour
         if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
         {
             _potionData = SaveSystemManager.GetData(_persistentId.Value) as PotionData;
-            _nextSpawnTimer = _potionData._newxSpawnTimer;
+            _nextSpawnTimer = _potionData._nextSpawnTimer;
         }
         else
         {
             _potionData = new()
             {
                 _id = _persistentId.Value,
-                _newxSpawnTimer = _spawnTimer
+                _nextSpawnTimer = _spawnTimer,
+                _healAmount = 2
             };
             _nextSpawnTimer = _spawnTimer;
         }
@@ -58,5 +61,16 @@ public class PotionSpawner : SavableMonoBehaviour
     public override void SnapshotData()
     {
         _potionData.UpdateData(_nextSpawnTimer);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<Character>(out var character))
+        {
+            character.Heal(_potionData._healAmount);
+
+            SpawnPotion(false);
+            _nextSpawnTimer = _spawnTimer;
+        }
     }
 }

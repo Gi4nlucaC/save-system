@@ -25,7 +25,7 @@ public class Character : SavableMonoBehaviour
     int MaxHp => BaseHp + (_level * HpGrowth);
 
 
-    [Header ("UI elements")]
+    [Header("UI elements")]
     [SerializeField] TMP_Text _nameText;
     [SerializeField] TMP_Text _lvlText;
     [SerializeField] TMP_Text _expText;
@@ -74,10 +74,10 @@ public class Character : SavableMonoBehaviour
         if (input.sqrMagnitude < 0.01f)
             return transform.rotation;
 
-        
+
         float angle = Mathf.Atan2(input.x, input.y) * Mathf.Rad2Deg;
 
-        
+
         float snapped = Mathf.Round(angle / 45f) * 45f;
 
         return Quaternion.Euler(0, snapped, 0);
