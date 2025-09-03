@@ -6,4 +6,5 @@ public interface ISavable
     public void LoadData();
 
     public void DeleteData();
+    public void SnapshotData();
 }
