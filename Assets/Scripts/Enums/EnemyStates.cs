@@ -1,5 +1,5 @@
 [System.Serializable]
-public enum EnemyStates
+public enum EnemyStates : byte
 {
     IDLE,
     PATROL,

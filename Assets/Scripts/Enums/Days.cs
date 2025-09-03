@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public enum Days
+public enum Days : byte
 {
     Monday,
     Tuesday,

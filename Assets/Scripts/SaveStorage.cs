@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,8 +15,12 @@ public class SaveStorage
 
     private string PathFor(string slotId, string extension) => Path.Combine(_rootPath, $"{slotId}.{extension}");
 
-    public void Write(string slotId, byte[] content) =>
-        File.WriteAllBytes(PathFor(slotId, "bin"), content);
+    public void Write(string slotId, List<PureRawData> datas)
+    {
+        using BinaryWriter writer = new(File.Open(PathFor(slotId, "bin"), FileMode.Create));
+        writer.Write(datas.Count);
+        DataSerializer.BytesSerialize(writer, datas);
+    }
 
     public void Write(string slotId, string content) =>
         File.WriteAllText(PathFor(slotId, "sav"), content);
@@ -26,8 +31,11 @@ public class SaveStorage
     public async Task WriteAsync(string slotId, string content) =>
         await File.WriteAllTextAsync(PathFor(slotId, "sav"), content);
 
-    public byte[] ReadBytes(string slotId) =>
-        File.Exists(PathFor(slotId, "bin")) ? File.ReadAllBytes(PathFor(slotId, "bin")) : null;
+    public List<PureRawData> ReadBytes(string slotId)
+    {
+        using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.Open));
+        return DataSerializer.BinaryDeserialize(reader);
+    }
 
     public string ReadJson(string slotId) =>
         File.Exists(PathFor(slotId, "sav")) ? File.ReadAllText(PathFor(slotId, "sav")) : null;

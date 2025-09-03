@@ -1,10 +1,14 @@
+using Newtonsoft.Json;
 using UnityEngine;
 
+[DataTypeId(3)]
 public class CharacterData : PhysicalEntityData
 {
     public int _hp = 1;
     public int _exp = 0;
     public int _lvl = 1;
+
+    public CharacterData() { }
 
     /// <summary>
     /// Constructor
@@ -16,6 +20,7 @@ public class CharacterData : PhysicalEntityData
     /// <param name="scale"></param>
     /// <param name="exp"></param>
     /// <param name="lvl"></param>
+    [JsonConstructor]
     public CharacterData(string id, string name = "", Vector3 pos = new Vector3(), Quaternion rot = new Quaternion(), Vector3 scale = new Vector3(), int hp = 1, int exp = 0, int lvl = 1)
     {
         this._id = id;

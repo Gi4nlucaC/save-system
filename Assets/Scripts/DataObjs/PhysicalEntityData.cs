@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DataTypeId(1)]
 public class PhysicalEntityData : PureRawData
 {
     public string _name;

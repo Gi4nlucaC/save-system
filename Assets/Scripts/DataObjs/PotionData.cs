@@ -1,3 +1,5 @@
+
+[DataTypeId(5)]
 public class PotionData : PureRawData
 {
     public float _nextSpawnTimer;

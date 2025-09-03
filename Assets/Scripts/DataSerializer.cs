@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
+using UnityEngine;
 
 public static class DataSerializer
 {
@@ -47,7 +48,7 @@ public static class DataSerializer
         }
     }
 
-    public static List<PureRawData> Deserialize(BinaryReader reader)
+    public static List<PureRawData> BinaryDeserialize(BinaryReader reader)
     {
         int count = reader.ReadInt32();
         List<PureRawData> entities = new(count);
@@ -61,7 +62,7 @@ public static class DataSerializer
                 throw new Exception("Nessun tipo registrato per id " + id);
 
             PureRawData entity = (PureRawData)Activator.CreateInstance(type);
-            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
 
             for (int j = 0; j < fields.Length; j++)
             {
@@ -73,9 +74,27 @@ public static class DataSerializer
                     f.SetValue(entity, reader.ReadSingle());
                 else if (f.FieldType == typeof(string))
                     f.SetValue(entity, reader.ReadString());
+                else if (f.FieldType == typeof(Vector3Data))
+                    f.SetValue(entity, reader.ReadVector3());
+                else if (f.FieldType == typeof(QuaternionData))
+                    f.SetValue(entity, reader.ReadQuaternion());
+                else if (f.FieldType.IsEnum)
+                {
+                    Type underlying = Enum.GetUnderlyingType(f.FieldType);
+
+                    object value = null;
+
+                    if (underlying == typeof(byte))
+                        value = reader.ReadByte();
+
+                    f.SetValue(entity, Enum.ToObject(f.FieldType, value));
+                }
                 else
-                    throw new Exception("Tipo non supportato: " + f.FieldType.Name);
+                    Debug.Log("Tipo non supportato: " + f.FieldType.Name);
+                //throw new Exception("Tipo non supportato: " + f.FieldType.Name);
             }
+
+            entities.Add(entity);
         }
         return entities;
     }
@@ -89,7 +108,7 @@ public static class DataSerializer
                 throw new Exception("Entity senza EntityTypeId: " + item.GetType().Name);
 
             writer.Write(attr.Id); // scrive direttamente l'id
-            FieldInfo[] fields = item.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            FieldInfo[] fields = item.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
 
             for (int i = 0; i < fields.Length; i++)
             {
@@ -101,8 +120,19 @@ public static class DataSerializer
                     writer.Write((float)f.GetValue(item));
                 else if (f.FieldType == typeof(string))
                     writer.Write((string)f.GetValue(item) ?? "");
+                else if (f.FieldType == typeof(Vector3Data))
+                    writer.WriteVector3((Vector3Data)f.GetValue(item));
+                else if (f.FieldType == typeof(QuaternionData))
+                    writer.WriteQuaternion((QuaternionData)f.GetValue(item));
+                else if (f.FieldType.IsEnum)
+                {
+                    Type underlying = Enum.GetUnderlyingType(f.FieldType);
+                    if (underlying == typeof(byte))
+                        writer.Write((byte)f.GetValue(item));
+                }
                 else
-                    throw new Exception("Tipo non supportato: " + f.FieldType.Name);
+                    Debug.Log("Tipo non supportato: " + f.FieldType.Name);
+                //throw new Exception("Tipo non supportato: " + f.FieldType.Name);
             }
         }
     }

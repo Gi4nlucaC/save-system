@@ -1,9 +1,14 @@
+using Newtonsoft.Json;
 using UnityEngine;
 
+[DataTypeId(2)]
 public class EnemyData : PhysicalEntityData
 {
     EnemyStates _enemyState = EnemyStates.IDLE;
 
+    public EnemyData() { }
+
+    [JsonConstructor]
     public EnemyData(string id, string name = "", Vector3 pos = new Vector3(), Quaternion rot = new Quaternion(), Vector3 scale = new Vector3(), EnemyStates enemyState = EnemyStates.IDLE)
     {
         this._id = id;

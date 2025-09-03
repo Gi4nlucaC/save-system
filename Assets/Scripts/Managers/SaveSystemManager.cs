@@ -63,6 +63,7 @@ public static class SaveSystemManager
         }
 
         _saveStorage.Write(slotId, DataSerializer.JsonSerialize(datas));
+        //_saveStorage.Write(slotId, datas);
     }
 
     public static void OnLoadData(string slotId)
@@ -72,6 +73,8 @@ public static class SaveSystemManager
         if (loadedString == null) return;
 
         _savedEntities = DataSerializer.Deserialize(loadedString);
+
+        //_savedEntities = _saveStorage.ReadBytes(slotId);
     }
 
     public static int ExistData(string id)
