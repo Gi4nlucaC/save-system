@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public enum SerializationMode
     {
         Json,
-        Bynaries
+        Binaries
     }
 
     [SerializeField] SerializationMode _serializationType;
