@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterData : EntityData
+public class CharacterData : PhysicalEntityData
 {
     public int _exp = 0;
     public int _lvl = 1;

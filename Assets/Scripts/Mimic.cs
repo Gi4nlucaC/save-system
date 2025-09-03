@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Mimic : SavableMonoBehaviour, ISavable
+public class Mimic : SavableMonoBehaviour
 {
     MovementComponent _movementComponent;
     EnemyData _enemyData;
@@ -20,12 +20,7 @@ public class Mimic : SavableMonoBehaviour, ISavable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-
-        if (!string.IsNullOrEmpty(PersistentId))
-            SaveSystemManager.RegisterSavable(this);
-        else
-            Debug.LogWarning($"{name}: PersistentId non generato. Premi 'Generate' sul campo UniqueGUID o usa il context menu.");
+        Initialize();
     }
 
     // Update is called once per frame
@@ -77,24 +72,24 @@ public class Mimic : SavableMonoBehaviour, ISavable
         }
     }
 
-    public void SnapshotData()
+    public override void SnapshotData()
     {
         _enemyData.UpdateData(transform.position, transform.rotation, transform.localScale);
     }
 
-    public void DeleteData()
+    public  override void DeleteData()
     {
 
     }
 
-    public EntityData SaveData()
+    public override PureRawData SaveData()
     {
         SnapshotData();
 
         return _enemyData;
     }
 
-    public void LoadData()
+    public override void LoadData()
     {
         if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
         {

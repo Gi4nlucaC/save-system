@@ -9,22 +9,22 @@ public class DataSerializer
         Formatting = Formatting.Indented
     };
 
-    public List<EntityData> Deserialize(string raw)
+    public List<PureRawData> Deserialize(string raw)
     {
-        return JsonConvert.DeserializeObject<List<EntityData>>(raw, _settings);
+        return JsonConvert.DeserializeObject<List<PureRawData>>(raw, _settings);
     }
 
-    public string JsonSerialize(List<EntityData> data)
+    public string JsonSerialize(List<PureRawData> data)
     {
         return JsonConvert.SerializeObject(data, _settings);
     }
 
-    public List<EntityData> Deserialize(byte[] raw)
+    public List<PureRawData> Deserialize(byte[] raw)
     {
         throw new System.NotImplementedException();
     }
 
-    public byte[] BytesSerialize(List<EntityData> data)
+    public byte[] BytesSerialize(List<PhysicalEntityData> data)
     {
         throw new System.NotImplementedException();
     }

@@ -1,9 +1,7 @@
 using UnityEngine;
 
-[System.Serializable]
-public class EntityData
+public class PhysicalEntityData : PureRawData
 {
-    public string _id;
     public string _name;
     public Vector3Data _position;
     public QuaternionData _rotation;

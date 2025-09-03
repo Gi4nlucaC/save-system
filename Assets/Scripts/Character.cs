@@ -19,12 +19,7 @@ public class Character : SavableMonoBehaviour, ISavable
         _playerInput.Enable();
         _movementComponent = new(1f);
 
-        LoadData();
-
-        if (!string.IsNullOrEmpty(PersistentId))
-            SaveSystemManager.RegisterSavable(this);
-        else
-            Debug.LogWarning($"{name}: PersistentId non generato. Premi 'Generate' sul campo UniqueGUID o usa il context menu.");
+        Initialize();
     }
 
     // Update is called once per frame
@@ -71,19 +66,19 @@ public class Character : SavableMonoBehaviour, ISavable
         _anim.Play(anim);
     }
 
-    public void SnapshotData()
+    public override void SnapshotData()
     {
         _characterData.UpdateData(transform.position, transform.rotation, transform.localScale);
     }
 
-    public EntityData SaveData()
+    public override PureRawData SaveData()
     {
         SnapshotData();
 
         return _characterData;
     }
 
-    public void LoadData()
+    public override void LoadData()
     {
         if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
         {
@@ -94,7 +89,7 @@ public class Character : SavableMonoBehaviour, ISavable
             _characterData = new(_persistentId.Value, "Gino", Vector3.zero, Quaternion.identity, Vector3.one, 1, 1);
     }
 
-    public void DeleteData()
+    public override void DeleteData()
     {
         throw new System.NotImplementedException();
     }

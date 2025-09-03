@@ -8,7 +8,7 @@ public static class SaveSystemManager
 {
 
     static List<ISavable> _savableItems = new();
-    static List<EntityData> _savedEntities = new();
+    static List<PureRawData> _savedEntities = new();
 
     static SaveStorage _saveStorage;
     static DataSerializer _dataSerializer;
@@ -42,7 +42,7 @@ public static class SaveSystemManager
 
     public static void OnSaveData(string slotId)
     {
-        List<EntityData> datas = new();
+        List<PureRawData> datas = new();
 
         foreach (var item in _savableItems)
         {
@@ -57,6 +57,9 @@ public static class SaveSystemManager
     public static void OnLoadData(string slotId)
     {
         var loadedString = _saveStorage.ReadJson(slotId);
+
+        if (loadedString == null) return;
+
         _savedEntities = _dataSerializer.Deserialize(loadedString);
     }
 
@@ -64,7 +67,7 @@ public static class SaveSystemManager
     {
         for (int i = 0; i < _savedEntities.Count; i++)
         {
-            EntityData item = _savedEntities[i];
+            PureRawData item = _savedEntities[i];
             if (item._id == id)
                 return i;
         }
@@ -72,7 +75,7 @@ public static class SaveSystemManager
         return -1;
     }
 
-    public static EntityData GetData(string id)
+    public static PureRawData GetData(string id)
     {
         int index = ExistData(id);
         if (index >= 0)

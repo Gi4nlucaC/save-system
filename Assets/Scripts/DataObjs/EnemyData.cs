@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyData : EntityData
+public class EnemyData : PhysicalEntityData
 {
     EnemyStates _enemyState = EnemyStates.IDLE;
 
