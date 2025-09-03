@@ -17,11 +17,7 @@ public class Mimic : SavableMonoBehaviour
     void Awake()
     {
         _movementComponent = new MovementComponent(1f);
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        Initialize();
+        RegisterForSave();
     }
 
     // Update is called once per frame

@@ -23,10 +23,8 @@ public class SavableMonoBehaviour : MonoBehaviour, ISavable
     }
 #endif
 
-    protected void Initialize()
+    protected void RegisterForSave()
     {
-        LoadData();
-
         if (!string.IsNullOrEmpty(PersistentId))
             SaveSystemManager.RegisterSavable(this);
         else

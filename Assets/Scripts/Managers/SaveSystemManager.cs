@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
@@ -11,6 +12,8 @@ public static class SaveSystemManager
     static List<PureRawData> _savedEntities = new();
 
     static SaveStorage _saveStorage;
+
+    public static event Action OnAllSavablesLoaded;
 
     private static readonly JsonSerializerSettings _settings = new()
     {
@@ -31,6 +34,16 @@ public static class SaveSystemManager
         {
             _savableItems.Add(savable);
         }
+    }
+
+    public static void LoadAllSavable()
+    {
+        foreach (var savedItem in _savableItems)
+        {
+            savedItem.LoadData();
+        }
+
+        OnAllSavablesLoaded?.Invoke();
     }
 
     public static void UnregisterSavable(ISavable savable)

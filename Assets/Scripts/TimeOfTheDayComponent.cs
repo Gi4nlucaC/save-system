@@ -16,9 +16,9 @@ public class TimeOfTheDayComponent : SavableMonoBehaviour
 
     TimeDateData _timeDateData;
 
-    private void Start()
+    private void Awake()
     {
-        Initialize();
+        RegisterForSave();
     }
 
     void Update()

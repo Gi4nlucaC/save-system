@@ -34,14 +34,13 @@ public class Character : SavableMonoBehaviour
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         _playerInput = new();
         _playerInput.Enable();
         _movementComponent = new(1f);
 
-        Initialize();
-        UpdateUI();
+        RegisterForSave();
     }
 
     // Update is called once per frame

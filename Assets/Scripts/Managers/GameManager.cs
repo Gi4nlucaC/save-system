@@ -19,9 +19,14 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        SaveSystemManager.OnAllSavablesLoaded += OnApplicationReady;
         SaveSystemManager.Init();
     }
     private void Start()
+    {
+        SaveSystemManager.LoadAllSavable();
+    }
+    private void OnApplicationReady()
     {
         if (_player != null)
             StartCoroutine(LifeExpRoutine());
@@ -29,8 +34,6 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LifeExpRoutine()
     {
-        yield return new WaitForSeconds(1f);
-        Debug.Log("coroutine");
         while (_player != null && !_player.IsDead())
         {
             _player.TakeDamage(damagePerTick);

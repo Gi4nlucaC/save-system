@@ -9,9 +9,9 @@ public class PotionSpawner : SavableMonoBehaviour
     float _nextSpawnTimer;
     Collider _collider;
 
-    private void Start()
+    private void Awake()
     {
-        Initialize();
+        RegisterForSave();
 
         TryGetComponent<Collider>(out _collider);
     }
