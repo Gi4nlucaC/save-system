@@ -125,7 +125,7 @@ public class Character : SavableMonoBehaviour
     void UpdateUI()
     {
         _nameText.text = _characterData._name;
-        _lvlText.text = $"{_level}";
+        _lvlText.text = $"lvl : {_level}";
         _expText.text = $"{_exp}/{ExpToNextLevel}";
         _hpText.text = $"{_currentHp}/{MaxHp}";
         _hpBar.fillAmount = (float)_currentHp / MaxHp;

@@ -26,6 +26,14 @@ public class Mimic : SavableMonoBehaviour
         HandleMovement();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.TryGetComponent<Character>(out var character))
+        {
+            character.TakeDamage(5);
+            Debug.Log("Gnam! the Mimic Bites U!");
+        }
+    }
     void OnEnable()
     {
         _inputRoutine = StartCoroutine(RandomInputRoutine());
