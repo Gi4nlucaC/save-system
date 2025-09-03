@@ -2,16 +2,10 @@
   "$type": "System.Collections.Generic.List`1[[PureRawData, Assembly-CSharp]], mscorlib",
   "$values": [
     {
-      "$type": "PotionData, Assembly-CSharp",
-      "_nextSpawnTimer": 5.2494607,
-      "_healAmount": 2,
-      "_id": "637f4e4695184fc6bec180cbbae88c39"
-    },
-    {
       "$type": "TimeDateData, Assembly-CSharp",
       "_day": 0,
-      "_minutes": 22,
-      "_hours": 7,
+      "_minutes": 13,
+      "_hours": 9,
       "_id": "4d92403999be40b796a903944348dc58"
     },
     {
@@ -19,16 +13,16 @@
       "_name": "Mimic",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 6.44002342,
-        "y": 1.08000016,
-        "z": 5.659136
+        "x": 2.86594367,
+        "y": 0.08000016,
+        "z": 3.79945469
       },
       "_rotation": {
         "$type": "QuaternionData, Assembly-CSharp",
         "x": 0.0,
-        "y": 0.183496356,
+        "y": -0.3911716,
         "z": 0.0,
-        "w": 0.9830204
+        "w": 0.920317769
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",
@@ -40,20 +34,20 @@
     },
     {
       "$type": "CharacterData, Assembly-CSharp",
-      "_hp": 54,
-      "_exp": 55,
+      "_hp": 56,
+      "_exp": 98,
       "_lvl": 1,
       "_name": "Gino",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": -2.89747834,
+        "x": -3.207904,
         "y": 0.08000016,
-        "z": -3.70909
+        "z": 1.38368475
       },
       "_rotation": {
         "$type": "QuaternionData, Assembly-CSharp",
         "x": 0.0,
-        "y": 0.7071068,
+        "y": -0.7071068,
         "z": 0.0,
         "w": 0.7071068
       },
@@ -64,6 +58,12 @@
         "z": 1.0
       },
       "_id": "6cba12f58293485196f1afe133b8b1f0"
+    },
+    {
+      "$type": "PotionData, Assembly-CSharp",
+      "_nextSpawnTimer": -0.00196885,
+      "_healAmount": 2,
+      "_id": "637f4e4695184fc6bec180cbbae88c39"
     }
   ]
 }
