@@ -1,9 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
-[DefaultExecutionOrder (-999999999)]
+[DefaultExecutionOrder(-999999999)]
 public class GameManager : MonoBehaviour
 {
+    public enum SerializationMode
+    {
+        Json,
+        Bynaries
+    }
+
+    [SerializeField] SerializationMode _serializationType;
+
     [SerializeField] Character _player;
 
     [SerializeField] float tickTime = 3f;
