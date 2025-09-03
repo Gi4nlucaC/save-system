@@ -9,14 +9,14 @@ public class EnemyData : EntityData
         this._id = id;
         this._name = name;
         this._position = new(pos);
-        this._rotation = new(rot.eulerAngles);
+        this._rotation = new(rot);
         this._scale = new(scale);
         this._enemyState = enemyState;
     }
     public void UpdateData(Vector3 pos, Quaternion rot, Vector3 scale, EnemyStates enemyState = EnemyStates.IDLE)
     {
         this._position = new(pos);
-        this._rotation = new(rot.eulerAngles);
+        this._rotation = new(rot);
         this._scale = new(scale);
 
         this._enemyState = enemyState;

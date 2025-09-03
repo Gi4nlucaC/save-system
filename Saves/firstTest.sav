@@ -7,15 +7,16 @@
       "_name": "Mimic",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 3.46162486,
+        "x": 2.31886435,
         "y": 0.0,
-        "z": -0.191957831
+        "z": 1.59588385
       },
       "_rotation": {
-        "$type": "Vector3Data, Assembly-CSharp",
+        "$type": "QuaternionData, Assembly-CSharp",
         "x": 0.0,
-        "y": 222.899536,
-        "z": 0.0
+        "y": -0.82583636,
+        "z": 0.0,
+        "w": 0.5639098
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",
@@ -32,15 +33,16 @@
       "_name": "Gino",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 0.0,
+        "x": -4.04381657,
         "y": 0.0,
-        "z": 0.0
+        "z": -0.379972368
       },
       "_rotation": {
-        "$type": "Vector3Data, Assembly-CSharp",
+        "$type": "QuaternionData, Assembly-CSharp",
         "x": 0.0,
-        "y": 180.0,
-        "z": 0.0
+        "y": -0.7071068,
+        "z": 0.0,
+        "w": 0.7071068
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",

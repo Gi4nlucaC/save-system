@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
 
@@ -8,12 +7,6 @@ public class Mimic : MonoBehaviour, ISavable
     public string PersistentId => _persistentId != null && _persistentId.IsValid ? _persistentId.Value : null;
     MovementComponent _movementComponent;
     EnemyData _enemyData;
-
-    private readonly JsonSerializerSettings _settings = new()
-    {
-        TypeNameHandling = TypeNameHandling.All,
-        Formatting = Formatting.Indented
-    };
 
     [Header("Random Movement")]
     [SerializeField] float minInterval = 0.6f;
@@ -29,7 +22,7 @@ public class Mimic : MonoBehaviour, ISavable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _enemyData = new(_persistentId.Value, "Mimic", transform.position, transform.rotation, transform.localScale, EnemyStates.IDLE);
+
 
         if (!string.IsNullOrEmpty(PersistentId))
             SaveSystemManager.RegisterSavable(this);
@@ -96,11 +89,6 @@ public class Mimic : MonoBehaviour, ISavable
 
     }
 
-    public ISavableData LoadData(string data)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public EntityData SaveData()
     {
         SnapshotData();
@@ -108,5 +96,14 @@ public class Mimic : MonoBehaviour, ISavable
         return _enemyData;
     }
 
-
+    public void LoadData()
+    {
+        if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
+        {
+            _enemyData = SaveSystemManager.GetData(_persistentId.Value) as EnemyData;
+            transform.SetPositionAndRotation(_enemyData._position.ToVector3(), _enemyData._rotation.ToQuaternion());
+        }
+        else
+            _enemyData = new(_persistentId.Value, "Mimic", transform.position, transform.rotation, transform.localScale, EnemyStates.IDLE);
+    }
 }

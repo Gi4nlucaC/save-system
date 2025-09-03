@@ -12,4 +12,9 @@ public class Vector3Data
         this.y = vector.y;
         this.z = vector.z;
     }
+
+    public Vector3 ToVector3()
+    {
+        return new Vector3(x, y, z);
+    }
 }

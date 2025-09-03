@@ -20,7 +20,7 @@ public class CharacterData : EntityData
         this._id = id;
         this._name = name;
         this._position = new(pos);
-        this._rotation = new(rot.eulerAngles);
+        this._rotation = new(rot);
         this._scale = new(scale);
         this._exp = exp;
         this._lvl = lvl;
@@ -29,7 +29,7 @@ public class CharacterData : EntityData
     public void UpdateData(Vector3 pos, Quaternion rot, Vector3 scale, int? exp = null, int? lvl = null)
     {
         this._position = new(pos);
-        this._rotation = new(rot.eulerAngles);
+        this._rotation = new(rot);
         this._scale = new(scale);
         _exp = (int)(exp.HasValue ? exp : this._exp);
         //_lvl = _lvl.HasValue ? lvl : this._lvl;

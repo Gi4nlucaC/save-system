@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Character : MonoBehaviour, ISavable
 {
@@ -10,11 +9,6 @@ public class Character : MonoBehaviour, ISavable
     public string PersistentId => _persistentId != null && _persistentId.IsValid ? _persistentId.Value : null;
 
     InputSystem_Actions _playerInput;
-    private readonly JsonSerializerSettings _settings = new()
-    {
-        TypeNameHandling = TypeNameHandling.All,
-        Formatting = Formatting.Indented
-    };
 
     [SerializeField] CharacterController _controller;
     [SerializeField] Animator _anim;
@@ -27,7 +21,7 @@ public class Character : MonoBehaviour, ISavable
         _playerInput.Enable();
         _movementComponent = new(1f);
 
-        _characterData = new(_persistentId.Value, "Gino", Vector3.zero, Quaternion.identity, Vector3.one, 1, 1);
+        LoadData();
 
         if (!string.IsNullOrEmpty(PersistentId))
             SaveSystemManager.RegisterSavable(this);
@@ -58,7 +52,6 @@ public class Character : MonoBehaviour, ISavable
         {
             PlayAnimation("Idle");
         }
-
     }
 
     private Quaternion Get8DirRotation(Vector2 input)
@@ -79,6 +72,7 @@ public class Character : MonoBehaviour, ISavable
     {
         _anim.Play(anim);
     }
+
     void SnapshotData()
     {
         _characterData.UpdateData(transform.position, transform.rotation, transform.localScale);
@@ -91,9 +85,15 @@ public class Character : MonoBehaviour, ISavable
         return _characterData;
     }
 
-    public ISavableData LoadData(string data)
+    public void LoadData()
     {
-        throw new System.NotImplementedException();
+        if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
+        {
+            _characterData = SaveSystemManager.GetData(_persistentId.Value) as CharacterData;
+            transform.SetPositionAndRotation(_characterData._position.ToVector3(), _characterData._rotation.ToQuaternion());
+        }
+        else
+            _characterData = new(_persistentId.Value, "Gino", Vector3.zero, Quaternion.identity, Vector3.one, 1, 1);
     }
 
     public void DeleteData()

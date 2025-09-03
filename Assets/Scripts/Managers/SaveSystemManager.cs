@@ -8,7 +8,7 @@ public static class SaveSystemManager
 {
 
     static List<ISavable> _savableItems = new();
-    static List<EntityData> _savedEntities;
+    static List<EntityData> _savedEntities = new();
 
     static SaveStorage _saveStorage;
     static DataSerializer _dataSerializer;
@@ -58,5 +58,31 @@ public static class SaveSystemManager
     {
         var loadedString = _saveStorage.ReadJson(slotId);
         _savedEntities = _dataSerializer.Deserialize(loadedString);
+    }
+
+    public static int ExistData(string id)
+    {
+        for (int i = 0; i < _savedEntities.Count; i++)
+        {
+            EntityData item = _savedEntities[i];
+            if (item._id == id)
+                return i;
+        }
+
+        return -1;
+    }
+
+    public static EntityData GetData(string id)
+    {
+        int index = ExistData(id);
+        if (index >= 0)
+            return _savedEntities[index];
+
+        return null;
+    }
+
+    public static void DeleteData(string id)
+    {
+
     }
 }
