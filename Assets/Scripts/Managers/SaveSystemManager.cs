@@ -11,7 +11,6 @@ public static class SaveSystemManager
     static List<PureRawData> _savedEntities = new();
 
     static SaveStorage _saveStorage;
-    static DataSerializer _dataSerializer;
 
     private static readonly JsonSerializerSettings _settings = new()
     {
@@ -23,7 +22,6 @@ public static class SaveSystemManager
     public static void Init()
     {
         _saveStorage = new("Saves");
-        _dataSerializer = new();
         OnLoadData("firstTest");
     }
 
@@ -51,7 +49,7 @@ public static class SaveSystemManager
             datas.Add(item.SaveData());
         }
 
-        _saveStorage.Write(slotId, _dataSerializer.JsonSerialize(datas));
+        _saveStorage.Write(slotId, DataSerializer.JsonSerialize(datas));
     }
 
     public static void OnLoadData(string slotId)
@@ -60,7 +58,7 @@ public static class SaveSystemManager
 
         if (loadedString == null) return;
 
-        _savedEntities = _dataSerializer.Deserialize(loadedString);
+        _savedEntities = DataSerializer.Deserialize(loadedString);
     }
 
     public static int ExistData(string id)

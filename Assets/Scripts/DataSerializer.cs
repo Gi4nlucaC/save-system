@@ -1,31 +1,110 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
 
-public class DataSerializer
+public static class DataSerializer
 {
-    private readonly JsonSerializerSettings _settings = new()
+
+    #region JSON
+    private static readonly JsonSerializerSettings _settings = new()
     {
         TypeNameHandling = TypeNameHandling.All,
         Formatting = Formatting.Indented
     };
 
-    public List<PureRawData> Deserialize(string raw)
+    public static List<PureRawData> Deserialize(string raw)
     {
         return JsonConvert.DeserializeObject<List<PureRawData>>(raw, _settings);
     }
 
-    public string JsonSerialize(List<PureRawData> data)
+    public static string JsonSerialize(List<PureRawData> data)
     {
         return JsonConvert.SerializeObject(data, _settings);
     }
 
-    public List<PureRawData> Deserialize(byte[] raw)
+    #endregion
+
+    #region BYTES
+
+    private static readonly Type[] TypeById = new Type[256];
+
+    static DataSerializer()
     {
-        throw new System.NotImplementedException();
+        Type[] allTypes = Assembly.GetExecutingAssembly().GetTypes();
+        foreach (Type t in allTypes)
+        {
+            if (typeof(PureRawData).IsAssignableFrom(t) && !t.IsAbstract)
+            {
+                object[] attrs = t.GetCustomAttributes(typeof(DataTypeIdAttribute), false);
+                if (attrs.Length > 0)
+                {
+                    var attr = (DataTypeIdAttribute)attrs[0];
+                    TypeById[attr.Id] = t;
+                }
+            }
+        }
     }
 
-    public byte[] BytesSerialize(List<PhysicalEntityData> data)
+    public static List<PureRawData> Deserialize(BinaryReader reader)
     {
-        throw new System.NotImplementedException();
+        int count = reader.ReadInt32();
+        List<PureRawData> entities = new(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            byte id = reader.ReadByte();
+            Type type = TypeById[id];
+
+            if (type == null)
+                throw new Exception("Nessun tipo registrato per id " + id);
+
+            PureRawData entity = (PureRawData)Activator.CreateInstance(type);
+            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+            for (int j = 0; j < fields.Length; j++)
+            {
+                FieldInfo f = fields[j];
+
+                if (f.FieldType == typeof(int))
+                    f.SetValue(entity, reader.ReadInt32());
+                else if (f.FieldType == typeof(float))
+                    f.SetValue(entity, reader.ReadSingle());
+                else if (f.FieldType == typeof(string))
+                    f.SetValue(entity, reader.ReadString());
+                else
+                    throw new Exception("Tipo non supportato: " + f.FieldType.Name);
+            }
+        }
+        return entities;
     }
+
+    public static void BytesSerialize(BinaryWriter writer, List<PureRawData> data)
+    {
+        foreach (var item in data)
+        {
+            var attr = (DataTypeIdAttribute)Attribute.GetCustomAttribute(item.GetType(), typeof(DataTypeIdAttribute));
+            if (attr == null)
+                throw new Exception("Entity senza EntityTypeId: " + item.GetType().Name);
+
+            writer.Write(attr.Id); // scrive direttamente l'id
+            FieldInfo[] fields = item.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo f = fields[i];
+
+                if (f.FieldType == typeof(int))
+                    writer.Write((int)f.GetValue(item));
+                else if (f.FieldType == typeof(float))
+                    writer.Write((float)f.GetValue(item));
+                else if (f.FieldType == typeof(string))
+                    writer.Write((string)f.GetValue(item) ?? "");
+                else
+                    throw new Exception("Tipo non supportato: " + f.FieldType.Name);
+            }
+        }
+    }
+    #endregion
 }

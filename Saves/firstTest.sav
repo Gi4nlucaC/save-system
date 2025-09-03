@@ -2,9 +2,14 @@
   "$type": "System.Collections.Generic.List`1[[PureRawData, Assembly-CSharp]], mscorlib",
   "$values": [
     {
+      "$type": "PotionData, Assembly-CSharp",
+      "_newxSpawnTimer": 1.75187206,
+      "_id": "637f4e4695184fc6bec180cbbae88c39"
+    },
+    {
       "$type": "TimeDateData, Assembly-CSharp",
       "_day": 0,
-      "_minutes": 4,
+      "_minutes": 8,
       "_hours": 11,
       "_id": "4d92403999be40b796a903944348dc58"
     },
@@ -13,16 +18,16 @@
       "_name": "Mimic",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 7.648504,
-        "y": 7.713993E-09,
-        "z": -0.136004046
+        "x": 6.14955854,
+        "y": 1.08000016,
+        "z": -0.0757542
       },
       "_rotation": {
         "$type": "QuaternionData, Assembly-CSharp",
         "x": 0.0,
-        "y": 0.883185744,
+        "y": 0.07767758,
         "z": 0.0,
-        "w": -0.469023377
+        "w": 0.9969786
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",
@@ -34,8 +39,8 @@
     },
     {
       "$type": "CharacterData, Assembly-CSharp",
-      "_hp": 60,
-      "_exp": 0,
+      "_hp": 58,
+      "_exp": 9,
       "_lvl": 1,
       "_name": "Gino",
       "_position": {
