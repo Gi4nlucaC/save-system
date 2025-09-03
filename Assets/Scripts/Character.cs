@@ -21,7 +21,7 @@ public class Character : SavableMonoBehaviour
     int _exp;
     int _currentHp;
 
-    int ExpToNextLevel => 100 * (_level * _level);  // formula standard RPG
+    int ExpToNextLevel => 100 * (_level * _level);
     int MaxHp => BaseHp + (_level * HpGrowth);
 
 
@@ -72,12 +72,12 @@ public class Character : SavableMonoBehaviour
     private Quaternion Get8DirRotation(Vector2 input)
     {
         if (input.sqrMagnitude < 0.01f)
-            return transform.rotation; // niente input → non ruotare
+            return transform.rotation;
 
-        // angolo in radianti → gradi
+        
         float angle = Mathf.Atan2(input.x, input.y) * Mathf.Rad2Deg;
 
-        // quantizza a multipli di 45°
+        
         float snapped = Mathf.Round(angle / 45f) * 45f;
 
         return Quaternion.Euler(0, snapped, 0);
@@ -105,7 +105,7 @@ public class Character : SavableMonoBehaviour
     void LevelUp()
     {
         _level++;
-        _currentHp = MaxHp; // full heal al level up
+        _currentHp = MaxHp;
         Debug.Log($"Level Up! -> Lvl {_level}, MaxHp = {MaxHp}");
     }
 

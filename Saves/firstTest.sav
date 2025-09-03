@@ -1,0 +1,63 @@
+{
+  "$type": "System.Collections.Generic.List`1[[PureRawData, Assembly-CSharp]], mscorlib",
+  "$values": [
+    {
+      "$type": "TimeDateData, Assembly-CSharp",
+      "_day": 0,
+      "_minutes": 4,
+      "_hours": 11,
+      "_id": "4d92403999be40b796a903944348dc58"
+    },
+    {
+      "$type": "EnemyData, Assembly-CSharp",
+      "_name": "Mimic",
+      "_position": {
+        "$type": "Vector3Data, Assembly-CSharp",
+        "x": 7.648504,
+        "y": 7.713993E-09,
+        "z": -0.136004046
+      },
+      "_rotation": {
+        "$type": "QuaternionData, Assembly-CSharp",
+        "x": 0.0,
+        "y": 0.883185744,
+        "z": 0.0,
+        "w": -0.469023377
+      },
+      "_scale": {
+        "$type": "Vector3Data, Assembly-CSharp",
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "_id": "7bef0fa2f6cb484dae34a5a39e8d1571"
+    },
+    {
+      "$type": "CharacterData, Assembly-CSharp",
+      "_hp": 60,
+      "_exp": 0,
+      "_lvl": 1,
+      "_name": "Gino",
+      "_position": {
+        "$type": "Vector3Data, Assembly-CSharp",
+        "x": 0.689172864,
+        "y": 1.54972076E-06,
+        "z": 2.82281923
+      },
+      "_rotation": {
+        "$type": "QuaternionData, Assembly-CSharp",
+        "x": 0.0,
+        "y": -0.7071068,
+        "z": 0.0,
+        "w": 0.7071068
+      },
+      "_scale": {
+        "$type": "Vector3Data, Assembly-CSharp",
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "_id": "6cba12f58293485196f1afe133b8b1f0"
+    }
+  ]
+}
