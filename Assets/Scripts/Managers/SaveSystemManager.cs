@@ -25,7 +25,7 @@ public static class SaveSystemManager
     public static void Init(SerializationMode mode)
     {
         _serializationMode = mode;
-        OnLoadData("firstTest");
+        //OnLoadData("firstTest");
     }
 
     public static void RegisterSavable(ISavable savable)

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -6,10 +7,16 @@ public class SlotsManager : MonoBehaviour
     [SerializeField] SerializationMode _serializationType;
     [SerializeField] string _folderName;
 
-    private void Start()
+    private string _lastSlotSaved;
+
+    public string LastSlotSaved => _lastSlotSaved;
+
+    private void Awake()
     {
         SaveSystemManager.Init(_serializationType);
         SaveStorage.Init(_folderName);
+
+        _lastSlotSaved = GetLastSlotSaved();
     }
 
     public FileInfo[] GetSlotInfos()
@@ -23,6 +30,9 @@ public class SlotsManager : MonoBehaviour
     public string GetLastSlotSaved()
     {
         var slots = GetSlotInfos();
+
+        if (slots.Length == 0) return null;
+
         FileInfo last = slots[0];
         for (int i = 1; i < slots.Length; i++)
         {
@@ -32,6 +42,6 @@ public class SlotsManager : MonoBehaviour
             }
         }
 
-        return last.FullName;
+        return Path.GetFileNameWithoutExtension(last.Name);
     }
 }

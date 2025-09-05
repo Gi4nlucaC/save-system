@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -24,14 +25,15 @@ public class MainMenuComponent : MonoBehaviour
         _deleteSaveSlotButton.onClick.AddListener(OnDeleteSaveSlotButtonClicked);
         _backToMenuButton.onClick.AddListener(OnBackToMenuButtonClicked);
 
+        Bootstrap();
 
-        _continueButton.gameObject.SetActive(false);
+        //_continueButton.gameObject.SetActive(false);
     }
 
     public void Bootstrap()
     {
         //get the files first from the cloud
-        if (true)//todo: if there's a save slot
+        if (String.IsNullOrEmpty(_slotManager.LastSlotSaved))//todo: if there's a save slot
         {
             _continueButton.onClick.AddListener(OnContinueButtonClicked);
             _continueButton.gameObject.SetActive(true);
@@ -43,7 +45,7 @@ public class MainMenuComponent : MonoBehaviour
     {
         // TODO: prendi l�ultimo slot di salvataggio valido
         //SaveSystemManager.OnLoadData(lastSlot);
-
+        SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
     }
 
     void OnNewGameButtonClicked()
