@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -16,32 +17,7 @@ public class SlotsManager : MonoBehaviour
         SaveSystemManager.Init(_serializationType);
         SaveStorage.Init(_folderName);
 
-        _lastSlotSaved = GetLastSlotSaved();
+        _lastSlotSaved = SaveSystemManager.GetLastSlotSaved();
     }
 
-    public FileInfo[] GetSlotInfos()
-    {
-        if (_serializationType == SerializationMode.Json)
-            return SaveStorage.CheckSaves("sav");
-        else
-            return SaveStorage.CheckSaves("bin");
-    }
-
-    public string GetLastSlotSaved()
-    {
-        var slots = GetSlotInfos();
-
-        if (slots.Length == 0) return null;
-
-        FileInfo last = slots[0];
-        for (int i = 1; i < slots.Length; i++)
-        {
-            if (slots[i].LastWriteTime > last.LastWriteTime)
-            {
-                last = slots[i];
-            }
-        }
-
-        return Path.GetFileNameWithoutExtension(last.Name);
-    }
 }

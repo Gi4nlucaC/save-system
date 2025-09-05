@@ -92,4 +92,31 @@ public static class SaveStorage
         // leggere il file slotid.meta e serializzarlo (può essere anche una lista di stringhe)
         return null;
     }
+    public static void WriteWithHeader(string slotId, MetaData header, List<PureRawData> datas)
+    {
+        using FileStream fs = new FileStream(PathFor(slotId, "bin"), FileMode.Create, FileAccess.Write);
+        using BinaryWriter writer = new BinaryWriter(fs);
+
+        string headerJson = Newtonsoft.Json.JsonConvert.SerializeObject(header);
+        byte[] headerBytes = System.Text.Encoding.UTF8.GetBytes(headerJson);
+
+        writer.Write(headerBytes.Length);
+
+        writer.Write(headerBytes);
+
+        DataSerializer.BytesSerialize(writer, datas);
+    }
+    public static MetaData ReadHeader(string slotId)
+    {
+        string path = PathFor(slotId, "bin");
+        if (!File.Exists(path)) return null;
+
+        using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+        using BinaryReader reader = new BinaryReader(fs);
+
+        int headerSize = reader.ReadInt32();
+        byte[] headerBytes = reader.ReadBytes(headerSize);
+        string headerJson = System.Text.Encoding.UTF8.GetString(headerBytes);
+        return Newtonsoft.Json.JsonConvert.DeserializeObject<MetaData>(headerJson);
+    }
 }
