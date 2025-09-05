@@ -1,46 +1,56 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-public class SaveStorage
+public static class SaveStorage
 {
-    private readonly string _rootPath;
+    private static string _rootPath;
 
-    public SaveStorage(string rootPath)
+    public static void Init(string path)
     {
-        _rootPath = rootPath;
-        if (!Directory.Exists(rootPath))
+        _rootPath = String.IsNullOrEmpty(path) ? "Saves" : path;
+        if (!Directory.Exists(_rootPath))
             Directory.CreateDirectory(_rootPath);
     }
 
-    private string PathFor(string slotId, string extension) => Path.Combine(_rootPath, $"{slotId}.{extension}");
+    public static string[] CheckSaves(string extension)
+    {
+        if (!Directory.Exists(_rootPath))
+            throw new DirectoryNotFoundException($"La cartella '{_rootPath}' non esiste.");
 
-    public void Write(string slotId, List<PureRawData> datas)
+        return Directory.GetFiles(_rootPath, $"*.{extension}", SearchOption.TopDirectoryOnly);
+    }
+
+    private static string PathFor(string slotId, string extension) =>
+        Path.Combine(_rootPath, $"{slotId}.{extension}");
+
+    public static void Write(string slotId, List<PureRawData> datas)
     {
         using BinaryWriter writer = new(File.Open(PathFor(slotId, "bin"), FileMode.Create));
         writer.Write(datas.Count);
         DataSerializer.BytesSerialize(writer, datas);
     }
 
-    public void Write(string slotId, string content) =>
+    public static void Write(string slotId, string content) =>
         File.WriteAllText(PathFor(slotId, "sav"), content);
 
-    public async Task WriteAsync(string slotId, byte[] content) =>
+    public static async Task WriteAsync(string slotId, byte[] content) =>
         await File.WriteAllBytesAsync(PathFor(slotId, "bin"), content);
 
-    public async Task WriteAsync(string slotId, string content) =>
+    public static async Task WriteAsync(string slotId, string content) =>
         await File.WriteAllTextAsync(PathFor(slotId, "sav"), content);
 
-    public List<PureRawData> ReadBytes(string slotId)
+    public static List<PureRawData> ReadBytes(string slotId)
     {
-        using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.Open));
+        using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.OpenOrCreate));
         return DataSerializer.BinaryDeserialize(reader);
     }
 
-    public string ReadJson(string slotId) =>
+    public static string ReadJson(string slotId) =>
         File.Exists(PathFor(slotId, "sav")) ? File.ReadAllText(PathFor(slotId, "sav")) : null;
 
-    public async Task<byte[]> ReadBytesAsync(string slotId)
+    public static async Task<byte[]> ReadBytesAsync(string slotId)
     {
         string p = PathFor(slotId, "bin");
 
@@ -50,7 +60,7 @@ public class SaveStorage
         return await File.ReadAllBytesAsync(p);
     }
 
-    public async Task<string> ReadJsonAsync(string slotId)
+    public static async Task<string> ReadJsonAsync(string slotId)
     {
         string p = PathFor(slotId, "sav");
 
@@ -61,10 +71,10 @@ public class SaveStorage
     }
 
 
-    public bool Exists(string slotId, string extension) =>
+    public static bool Exists(string slotId, string extension) =>
         File.Exists(PathFor(slotId, extension));
 
-    public void Delete(string slotId, string extension)
+    public static void Delete(string slotId, string extension)
     {
         string p = PathFor(slotId, extension);
         if (File.Exists(p)) File.Delete(p);

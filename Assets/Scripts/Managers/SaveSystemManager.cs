@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
-using UnityEngine;
-using UnityEngine.UI;
 
 public static class SaveSystemManager
 {
@@ -11,7 +9,7 @@ public static class SaveSystemManager
     static List<ISavable> _savableItems = new();
     static List<PureRawData> _savedEntities = new();
 
-    static SaveStorage _saveStorage;
+    static SerializationMode _serializationMode;
 
     public static event Action OnAllSavablesLoaded;
 
@@ -22,9 +20,9 @@ public static class SaveSystemManager
     };
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public static void Init()
+    public static void Init(SerializationMode mode)
     {
-        _saveStorage = new("Saves");
+        _serializationMode = mode;
         OnLoadData("firstTest");
     }
 
@@ -55,26 +53,36 @@ public static class SaveSystemManager
     {
         List<PureRawData> datas = new();
 
-        foreach (var item in _savableItems)
+        if (_serializationMode == SerializationMode.Json)
         {
-            /* var x = item.SaveData();
-            stringBuilder.Append(x); */
-            datas.Add(item.SaveData());
-        }
+            for (int i = 0; i < _savableItems.Count; i++)
+            {
+                ISavable item = _savableItems[i];
+                datas.Add(item.SaveData());
+            }
 
-        _saveStorage.Write(slotId, DataSerializer.JsonSerialize(datas));
-        //_saveStorage.Write(slotId, datas);
+            SaveStorage.Write(slotId, DataSerializer.JsonSerialize(datas));
+        }
+        else
+        {
+            SaveStorage.Write(slotId, datas);
+        }
     }
 
     public static void OnLoadData(string slotId)
     {
-        var loadedString = _saveStorage.ReadJson(slotId);
+        if (_serializationMode == SerializationMode.Json)
+        {
+            var loadedString = SaveStorage.ReadJson(slotId);
 
-        if (loadedString == null) return;
+            if (loadedString == null) return;
 
-        _savedEntities = DataSerializer.Deserialize(loadedString);
-
-        //_savedEntities = _saveStorage.ReadBytes(slotId);
+            _savedEntities = DataSerializer.Deserialize(loadedString);
+        }
+        else
+        {
+            _savedEntities = SaveStorage.ReadBytes(slotId);
+        }
     }
 
     public static int ExistData(string id)

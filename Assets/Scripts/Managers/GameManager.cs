@@ -4,14 +4,6 @@ using UnityEngine;
 [DefaultExecutionOrder(-999999999)]
 public class GameManager : MonoBehaviour
 {
-    public enum SerializationMode
-    {
-        Json,
-        Binaries
-    }
-
-    [SerializeField] SerializationMode _serializationType;
-
     [SerializeField] Character _player;
 
     [SerializeField] float tickTime = 3f;
@@ -20,8 +12,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         SaveSystemManager.OnAllSavablesLoaded += OnApplicationReady;
-        SaveSystemManager.Init();
     }
+
     private void Start()
     {
         SaveSystemManager.LoadAllSavable();
