@@ -79,4 +79,16 @@ public static class SaveStorage
         string p = PathFor(slotId, extension);
         if (File.Exists(p)) File.Delete(p);
     }
+
+    public static void WriteMetadata(string slotId, object[] args)
+    {
+        // prendere tutti i dati in input (es. nome, lvl, tempo)
+        // e scrivere su un file con nome uguale allo slotId ma con estensione .meta
+    }
+
+    public static string[] ReadMetadata(string slotId)
+    {
+        // leggere il file slotid.meta e serializzarlo (può essere anche una lista di stringhe)
+        return null;
+    }
 }
