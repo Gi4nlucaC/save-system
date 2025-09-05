@@ -46,6 +46,8 @@ public class MainMenuComponent : MonoBehaviour
         // TODO: prendi l�ultimo slot di salvataggio valido
         //SaveSystemManager.OnLoadData(lastSlot);
         SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
+        SceneManager.LoadScene(1);
+
     }
 
     void OnNewGameButtonClicked()
