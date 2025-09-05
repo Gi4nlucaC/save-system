@@ -13,6 +13,8 @@ public static class SaveSystemManager
 
     public static event Action OnAllSavablesLoaded;
 
+    public static event Action OnAutoSave;
+
     private static readonly JsonSerializerSettings _settings = new()
     {
         TypeNameHandling = TypeNameHandling.All,
@@ -109,5 +111,12 @@ public static class SaveSystemManager
     public static void DeleteData(string id)
     {
 
+    }
+
+    public static void AutoSave(string id)
+    {
+        OnAutoSave?.Invoke();
+
+        OnSaveData(id);
     }
 }

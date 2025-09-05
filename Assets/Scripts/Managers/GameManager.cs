@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] float tickTime = 3f;
     [SerializeField] int damagePerTick = 1;
 
+    [SerializeField] float autoSaveInterval = 30f;
+
     private void Awake()
     {
         SaveSystemManager.OnAllSavablesLoaded += OnApplicationReady;
@@ -17,6 +19,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SaveSystemManager.LoadAllSavable();
+
+        StartCoroutine(AutoSaveRoutine());
     }
     private void OnApplicationReady()
     {
@@ -34,6 +38,16 @@ public class GameManager : MonoBehaviour
             _player.AddExp(expGain);
 
             yield return new WaitForSeconds(tickTime);
+        }
+    }
+
+    private IEnumerator AutoSaveRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(autoSaveInterval);
+
+            SaveSystemManager.AutoSave("AUTOSAVE");
         }
     }
 }

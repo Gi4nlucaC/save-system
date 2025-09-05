@@ -28,6 +28,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
+        SaveSystemManager.OnAutoSave += OnAutoSave;
+
         _menuButtonOpen.onClick.AddListener(OnMenuOpenClicked);
         _menuButtonClose.onClick.AddListener(OnMenuCloseClicked);
         _savedSlotMenuButtonClose.onClick.AddListener(OnSavedSlotMenuCloseClicked);
@@ -110,5 +112,10 @@ public class UIManager : MonoBehaviour
 
         _savingLoadingText.gameObject.SetActive(false);
         _currentMessageRoutine = null;
+    }
+
+    void OnAutoSave()
+    {
+        ShowMessage("Saving... Dont Turn OFF!");
     }
 }
