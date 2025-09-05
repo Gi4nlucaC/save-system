@@ -1,4 +1,7 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuComponent : MonoBehaviour
@@ -8,7 +11,20 @@ public class MainMenuComponent : MonoBehaviour
     [SerializeField] Button _loadGameButton;
     [SerializeField] Button _deleteSaveSlotButton;
 
+    [SerializeField] GameObject _savedSlotsPanel;
+    [SerializeField] Button _backToMenuButton;
 
+
+    private void Awake()
+    {
+        _newGameButton.onClick.AddListener(OnNewGameButtonClicked);
+        _loadGameButton.onClick.AddListener(OnLoadGameButtonClicked);
+        _deleteSaveSlotButton.onClick.AddListener(OnDeleteSaveSlotButtonClicked);
+        _backToMenuButton.onClick.AddListener(OnBackToMenuButtonClicked);
+
+
+        _continueButton.gameObject.SetActive(false);
+    }
 
     public void Bootstrap()
     {
@@ -19,26 +35,31 @@ public class MainMenuComponent : MonoBehaviour
             _continueButton.gameObject.SetActive(true);
         }
 
-
     }
 
     void OnContinueButtonClicked()
     {
-        //prendi l'ultimo slot di salvataggio
+        // TODO: prendi l’ultimo slot di salvataggio valido
+        //SaveSystemManager.OnLoadData(lastSlot);
     }
 
     void OnNewGameButtonClicked()
     {
-        //fai partire una nuova partita
+        SceneManager.LoadScene(1);
     }
 
     void OnLoadGameButtonClicked()
     {
-        //apre un pannello con gli slot salvati per caricarli
+        _savedSlotsPanel.SetActive(true);
     }
 
     void OnDeleteSaveSlotButtonClicked()
     {
-        //apre un pannello con gli slot salvati per cancellarli
+        _savedSlotsPanel.SetActive(true);
+    }
+
+    void OnBackToMenuButtonClicked()
+    {
+        _savedSlotsPanel.SetActive(false);
     }
 }
