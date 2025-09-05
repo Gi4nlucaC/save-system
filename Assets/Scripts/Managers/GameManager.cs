@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         SaveSystemManager.OnAllSavablesLoaded += OnApplicationReady;
+        SaveStorage.Init("Saves");  //TODO DA TOGLIERE
+        SaveSystemManager.Init(SerializationMode.Json);     //TODO DA TOGLIERE
     }
 
     private void Start()

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class MainMenuComponent : MonoBehaviour
 {
+    [SerializeField] SlotsManager _slotManager;
+
     [SerializeField] Button _continueButton;
     [SerializeField] Button _newGameButton;
     [SerializeField] Button _loadGameButton;
@@ -39,8 +41,9 @@ public class MainMenuComponent : MonoBehaviour
 
     void OnContinueButtonClicked()
     {
-        // TODO: prendi l’ultimo slot di salvataggio valido
+        // TODO: prendi lï¿½ultimo slot di salvataggio valido
         //SaveSystemManager.OnLoadData(lastSlot);
+
     }
 
     void OnNewGameButtonClicked()

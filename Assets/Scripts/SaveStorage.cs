@@ -14,12 +14,13 @@ public static class SaveStorage
             Directory.CreateDirectory(_rootPath);
     }
 
-    public static string[] CheckSaves(string extension)
+    public static FileInfo[] CheckSaves(string extension)
     {
         if (!Directory.Exists(_rootPath))
             throw new DirectoryNotFoundException($"La cartella '{_rootPath}' non esiste.");
 
-        return Directory.GetFiles(_rootPath, $"*.{extension}", SearchOption.TopDirectoryOnly);
+        DirectoryInfo dir = new DirectoryInfo(_rootPath);
+        return dir.GetFiles($"*.{extension}", SearchOption.TopDirectoryOnly);
     }
 
     private static string PathFor(string slotId, string extension) =>
