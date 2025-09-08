@@ -14,6 +14,7 @@ public class SlotsManager : MonoBehaviour
 
     private void Awake()
     {
+        CloudSave.Init();
         SaveSystemManager.Init(_serializationType);
         SaveStorage.Init(_folderName);
 
