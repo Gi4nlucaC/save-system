@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button _loadGameButton;
     [SerializeField] Button _quitGameButton;
 
-    [SerializeField] GameObject _savedSlotsPanel;
+    [SerializeField] SlotContainerUI _savedSlotsPanel;
 
     [SerializeField] float _messageDuration = 2f;
     [SerializeField] float _fadeDuration = 0.5f;
@@ -54,25 +54,44 @@ public class UIManager : MonoBehaviour
 
     public void OnSavedSlotMenuCloseClicked()
     {
-        _savedSlotsPanel.SetActive(false);
+        SaveSystemManager.OnGameSavedManually -= OnGameSavedSucessfully;
+        SaveSystemManager.OnGameSavedManually -= OnSaveAndQuitSucessFully;
+
+        _savedSlotsPanel.ToggleVisibility();
     }
 
     public void OnSaveButtonClicked()
     {
-        SaveSystemManager.OnSaveData("firstTest");
+        SaveSystemManager.OnGameSavedManually += OnGameSavedSucessfully;
+        _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
+        _savedSlotsPanel.ToggleVisibility();
+
+    }
+
+    public void OnGameSavedSucessfully()
+    {
+        _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
         ShowMessage("Game Saved!");
     }
 
     public void OnSaveAndQuitButtonClicked()
     {
-        SaveSystemManager.OnSaveData("firstTest");
+        SaveSystemManager.OnGameSavedManually += OnSaveAndQuitSucessFully;
+        _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
+        _savedSlotsPanel.ToggleVisibility();
+
+    }
+
+    void OnSaveAndQuitSucessFully()
+    {
         ShowMessage("Game Saved. Quitting...");
         SceneManager.LoadScene(0);
     }
 
     public void OnLoadButtonClicked()
     {
-        _savedSlotsPanel.SetActive(true);
+        _savedSlotsPanel.RefreshList(UISlotsStates.LOAD);
+        _savedSlotsPanel.ToggleVisibility();
     }
 
     public void OnQuitButtonClicked()
