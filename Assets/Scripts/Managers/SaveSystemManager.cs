@@ -15,6 +15,8 @@ public static class SaveSystemManager
 
     public static event Action OnAutoSave;
 
+    public static event Action OnGameSavedManually;
+
     private static readonly JsonSerializerSettings _settings = new()
     {
         TypeNameHandling = TypeNameHandling.All,
@@ -105,7 +107,9 @@ public static class SaveSystemManager
                 if (canBreak == 2) break;
             }
 
-            SaveStorage.WriteWithHeader(slotId, header, datas.values);
+            SaveStorage.WriteWithHeader(slotId, header, datas);
+
+            OnGameSavedManually?.Invoke();
         }
     }
 
@@ -189,7 +193,7 @@ public static class SaveSystemManager
         return Path.GetFileNameWithoutExtension(last.Name);
     }
 
-    public static void GetSlotMetaInfo()
+    public static List<MetaData> GetSlotMetaInfo()
     {
         var saveFiles = GetSlotInfos();
 
@@ -206,17 +210,22 @@ public static class SaveSystemManager
             }
         }
 
-        // Stampa tutti gli header
-        foreach (var header in headers)
-        {
-            Debug.Log($"Slot: {header.SlotId}");
-            Debug.Log($"Player: {header.PlayerName}");
-            Debug.Log($"Playtime: {header.PlayTimeSeconds} sec");
-            Debug.Log($"Day: {header.Day}, {header.Hours:D2}:{header.Minutes:D2}");
-            Debug.Log("-----------------------------");
-        }
-
         if (headers.Count == 0)
-            Debug.Log("Nessun salvataggio trovato.");
+            Debug.Log("No save found.");
+
+        return headers;
+    }
+
+    public static string BuildDateString(MetaData meta)
+    {
+        if (meta == null)
+            return string.Empty;
+
+        return $"{meta.Day} - {meta.Hours:D2}:{meta.Minutes:D2}";
+    }
+    public static string FormatPlayTime(double playTimeSeconds)
+    {
+        var ts = TimeSpan.FromSeconds(playTimeSeconds);
+        return $"{(int)ts.TotalHours:D2}:{ts.Minutes:D2}:{ts.Seconds:D2}";
     }
 }

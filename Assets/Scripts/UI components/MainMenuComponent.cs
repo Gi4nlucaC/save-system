@@ -16,9 +16,8 @@ public class MainMenuComponent : MonoBehaviour
     [SerializeField] Button _loadGameButton;
     [SerializeField] Button _deleteSaveSlotButton;
 
-    [SerializeField] GameObject _savedSlotsPanel;
+    [SerializeField] SlotContainerUI _savedSlotsPanel;
     [SerializeField] Button _backToMenuButton;
-
 
     private void Awake()
     {
@@ -43,6 +42,7 @@ public class MainMenuComponent : MonoBehaviour
 
     }
 
+
     void OnContinueButtonClicked()
     {
         // TODO: prendi l�ultimo slot di salvataggio valido
@@ -63,7 +63,6 @@ public class MainMenuComponent : MonoBehaviour
             SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
         }
         SceneManager.LoadScene(1);
-
     }
 
     void OnNewGameButtonClicked()
@@ -73,16 +72,24 @@ public class MainMenuComponent : MonoBehaviour
 
     void OnLoadGameButtonClicked()
     {
-        _savedSlotsPanel.SetActive(true);
+        _savedSlotsPanel.RefreshList(UISlotsStates.LOAD);
+        _savedSlotsPanel.ToggleVisibility();
+    }
+
+    void OnOverwriteSaveSlotButtonClicked()
+    {
+        _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
+        _savedSlotsPanel.ToggleVisibility();
     }
 
     void OnDeleteSaveSlotButtonClicked()
     {
-        _savedSlotsPanel.SetActive(true);
+        _savedSlotsPanel.RefreshList(UISlotsStates.DELETE);
+        _savedSlotsPanel.ToggleVisibility();
     }
 
     void OnBackToMenuButtonClicked()
     {
-        _savedSlotsPanel.SetActive(false);
+        _savedSlotsPanel.ToggleVisibility();
     }
 }
