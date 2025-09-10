@@ -26,6 +26,21 @@ public static class DataSerializer
         return JsonConvert.SerializeObject(data, _settings);
     }
 
+    public static string JsonSerializeWithHeader(MetaData header, List<PureRawData> data)
+    {
+        var container = new SaveContainer
+        {
+            Header = header,
+            Data = data
+        };
+        return JsonConvert.SerializeObject(container, _settings);
+    }
+
+    public static SaveContainer DeserializeWithHeader(string raw)
+    {
+        return JsonConvert.DeserializeObject<SaveContainer>(raw, _settings);
+    }
+
     #endregion
 
     #region BYTES

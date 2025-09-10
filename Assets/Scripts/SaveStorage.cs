@@ -81,16 +81,21 @@ public static class SaveStorage
         if (File.Exists(p)) File.Delete(p);
     }
 
-    public static void WriteMetadata(string slotId, object[] args)
+    public static void WriteJsonWithHeader(string slotId, MetaData header, List<PureRawData> datas)
     {
-        // prendere tutti i dati in input (es. nome, lvl, tempo)
-        // e scrivere su un file con nome uguale allo slotId ma con estensione .meta
+        string path = PathFor(slotId, "json");
+
+        var json = DataSerializer.JsonSerializeWithHeader(header, datas);
+        File.WriteAllText(path, json);
     }
 
-    public static string[] ReadMetadata(string slotId)
+    public static SaveContainer ReadJsonWithHeader(string slotId)
     {
-        // leggere il file slotid.meta e serializzarlo (può essere anche una lista di stringhe)
-        return null;
+        string path = PathFor(slotId, "json");
+        if (!File.Exists(path)) return null;
+
+        string raw = File.ReadAllText(path);
+        return DataSerializer.DeserializeWithHeader(raw);
     }
     public static void WriteWithHeader(string slotId, MetaData header, List<PureRawData> datas)
     {

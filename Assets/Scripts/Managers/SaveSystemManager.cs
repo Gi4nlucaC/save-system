@@ -69,8 +69,42 @@ public static class SaveSystemManager
 
         if (_serializationMode == SerializationMode.Json)
         {
-            SaveStorage.Write(slotId, DataSerializer.JsonSerialize(datas.values));
-            CloudSave.SaveData(datas);
+            // Costruisci i dati da salvare
+            List<PureRawData> datas = new();
+            for (int i = 0; i < _savableItems.Count; i++)
+                datas.Add(_savableItems[i].SaveData());
+
+            // Costruisci un header MetaData
+            MetaData header = new MetaData
+            {
+                SlotId = slotId,
+                PlayerName = "Unknown",
+                PlayTimeSeconds = 0,
+                Day = Days.Monday,
+                Hours = 0,
+                Minutes = 0
+            };
+
+            int canBreak = 0;
+            foreach (var data in datas)
+            {
+                if (data is CharacterData character && !string.IsNullOrEmpty(character._name))
+                {
+                    header.PlayerName = character._name;
+                    canBreak++;
+                }
+                if (data is TimeDateData time)
+                {
+                    header.Day = time._day;
+                    header.Hours = time._hours;
+                    header.Minutes = time._minutes;
+                    canBreak++;
+                }
+                if (canBreak == 2) break;
+            }
+
+            SaveStorage.WriteJsonWithHeader(slotId, header, datas);
+            OnGameSavedManually?.Invoke();
         }
         else
         {
@@ -117,11 +151,13 @@ public static class SaveSystemManager
     {
         if (_serializationMode == SerializationMode.Json)
         {
-            var loadedString = SaveStorage.ReadJson(slotId);
+            var container = SaveStorage.ReadJsonWithHeader(slotId);
 
-            if (loadedString == null) return;
+            if (container == null) return;
 
-            _savedEntities = DataSerializer.Deserialize<List<PureRawData>>(loadedString);
+            _savedEntities = container.Data;
+            MetaData header = container.Header;
+
         }
         else
         {
@@ -203,17 +239,22 @@ public static class SaveSystemManager
         foreach (var file in saveFiles)
         {
             string slotId = Path.GetFileNameWithoutExtension(file.Name);
-            MetaData header = SaveStorage.ReadHeader(slotId);
-            if (header != null)
+            MetaData header = null;
+            if (_serializationMode == SerializationMode.Json)
             {
-                headers.Add(header);
+                var container = SaveStorage.ReadJsonWithHeader(slotId);
+                if (container != null) header = container.Header;
             }
+            else
+            {
+                header = SaveStorage.ReadHeader(slotId);
+            }
+
+            if (header != null)
+                headers.Add(header);
         }
 
-        if (headers.Count == 0)
-            Debug.Log("No save found.");
-
-        return headers;
+            return headers;
     }
 
     public static string BuildDateString(MetaData meta)
