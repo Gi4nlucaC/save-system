@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public static event Action OnQuitGame;
-
     [SerializeField] TMP_Text _savingLoadingText;
 
     [SerializeField] Button _menuButtonOpen;
@@ -88,7 +86,7 @@ public class UIManager : MonoBehaviour
     void OnSaveAndQuitSucessfully()
     {
         ShowMessage("Game Saved. Quitting...");
-        OnQuitGame?.Invoke();
+        SaveSystemManager.OnResetGame();
         SceneManager.LoadScene(0);
     }
 

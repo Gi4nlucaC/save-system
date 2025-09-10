@@ -27,7 +27,6 @@ public static class SaveSystemManager
     public static void Init(SerializationMode mode)
     {
         _serializationMode = mode;
-        UIManager.OnQuitGame += () => _savableItems.Clear();
         //OnLoadData("firstTest");
     }
 
@@ -52,6 +51,11 @@ public static class SaveSystemManager
     public static void UnregisterSavable(ISavable savable)
     {
         _savableItems.Remove(savable);
+    }
+
+    public static void OnResetGame()
+    {
+        _savableItems.Clear();
     }
 
     public static void OnSaveData(string slotId)
