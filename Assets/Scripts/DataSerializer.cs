@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -15,9 +16,9 @@ public static class DataSerializer
         Formatting = Formatting.Indented
     };
 
-    public static List<PureRawData> Deserialize(string raw)
+    public static T Deserialize<T>(string raw)
     {
-        return JsonConvert.DeserializeObject<List<PureRawData>>(raw, _settings);
+        return JsonConvert.DeserializeObject<T>(raw, _settings);
     }
 
     public static string JsonSerialize(List<PureRawData> data)
@@ -47,6 +48,8 @@ public static class DataSerializer
             }
         }
     }
+
+    public static Type[] GetTypesToRegister() => TypeById;
 
     public static List<PureRawData> BinaryDeserialize(BinaryReader reader)
     {

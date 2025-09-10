@@ -53,21 +53,26 @@ public static class SaveSystemManager
 
     public static void OnSaveData(string slotId)
     {
-        List<PureRawData> datas = new();
+        CloudData datas = new()
+        {
+            nameSlot = slotId,
+            values = new()
+        };
 
         for (int i = 0; i < _savableItems.Count; i++)
         {
             ISavable savable = _savableItems[i];
-            datas.Add(savable.SaveData());
+            datas.values.Add(savable.SaveData());
         }
 
         if (_serializationMode == SerializationMode.Json)
         {
-            SaveStorage.Write(slotId, DataSerializer.JsonSerialize(datas));
+            SaveStorage.Write(slotId, DataSerializer.JsonSerialize(datas.values));
+            CloudSave.SaveData(datas);
         }
         else
         {
-            
+
             MetaData header = new MetaData
             {
                 SlotId = slotId,
@@ -80,7 +85,7 @@ public static class SaveSystemManager
 
             int canBreak = 0;
 
-            foreach (var data in datas)
+            foreach (var data in datas.values)
             {
                 if (data is CharacterData character && !string.IsNullOrEmpty(character._name))
                 {
@@ -100,7 +105,7 @@ public static class SaveSystemManager
                 if (canBreak == 2) break;
             }
 
-            SaveStorage.WriteWithHeader(slotId, header, datas);
+            SaveStorage.WriteWithHeader(slotId, header, datas.values);
         }
     }
 
@@ -112,12 +117,17 @@ public static class SaveSystemManager
 
             if (loadedString == null) return;
 
-            _savedEntities = DataSerializer.Deserialize(loadedString);
+            _savedEntities = DataSerializer.Deserialize<List<PureRawData>>(loadedString);
         }
         else
         {
             _savedEntities = SaveStorage.ReadBytes(slotId);
         }
+    }
+
+    public static void OnCloudLoadData(List<PureRawData> data)
+    {
+        _savedEntities = data;
     }
 
     public static int ExistData(string id)

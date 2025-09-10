@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using MongoDB.Bson;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -45,7 +47,21 @@ public class MainMenuComponent : MonoBehaviour
     {
         // TODO: prendi l�ultimo slot di salvataggio valido
         //SaveSystemManager.OnLoadData(lastSlot);
-        SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
+        //SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
+
+        var cloudSavings = CloudSave.LoadData();
+        if (cloudSavings.Count > 0)
+        {
+            foreach (var item in cloudSavings)
+            {
+
+            }
+
+        }
+        else
+        {
+            SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
+        }
         SceneManager.LoadScene(1);
 
     }

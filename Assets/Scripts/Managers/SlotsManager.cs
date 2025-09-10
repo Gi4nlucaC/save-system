@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SlotsManager : MonoBehaviour
 {
+    [SerializeField] UniqueGUID _userId;
     [SerializeField] SerializationMode _serializationType;
     [SerializeField] string _folderName;
 
@@ -14,11 +15,29 @@ public class SlotsManager : MonoBehaviour
 
     private void Awake()
     {
-        CloudSave.Init();
+        CloudSave.Init(userId: _userId.Value);
         SaveSystemManager.Init(_serializationType);
         SaveStorage.Init(_folderName);
 
         _lastSlotSaved = SaveSystemManager.GetLastSlotSaved();
     }
+
+#if UNITY_EDITOR
+    [ExecuteInEditMode]
+    private void OnValidate()
+    {
+        Generate();
+    }
+
+    [ExecuteInEditMode]
+    private void Generate()
+    {
+        if (_userId == null)
+            _userId = new UniqueGUID();
+
+        if (!_userId.IsValid)
+            _userId.Set(System.Guid.NewGuid().ToString("N"));
+    }
+#endif
 
 }

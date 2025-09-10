@@ -3,7 +3,6 @@ using MongoDB.Bson;
 
 public class CloudData
 {
-    public ObjectId id;
-    public string type;
+    public string nameSlot;
     public List<PureRawData> values;
 }

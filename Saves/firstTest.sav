@@ -4,8 +4,8 @@
     {
       "$type": "TimeDateData, Assembly-CSharp",
       "_day": 0,
-      "_minutes": 13,
-      "_hours": 9,
+      "_minutes": 30,
+      "_hours": 8,
       "_id": "4d92403999be40b796a903944348dc58"
     },
     {
@@ -13,16 +13,16 @@
       "_name": "Mimic",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": 2.86594367,
-        "y": 0.08000016,
-        "z": 3.79945469
+        "x": -1.019362,
+        "y": 0.08000052,
+        "z": -0.521341443
       },
       "_rotation": {
         "$type": "QuaternionData, Assembly-CSharp",
         "x": 0.0,
-        "y": -0.3911716,
+        "y": 0.994593143,
         "z": 0.0,
-        "w": 0.920317769
+        "w": -0.103848509
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",
@@ -34,22 +34,22 @@
     },
     {
       "$type": "CharacterData, Assembly-CSharp",
-      "_hp": 56,
-      "_exp": 98,
+      "_hp": 30,
+      "_exp": 90,
       "_lvl": 1,
       "_name": "Gino",
       "_position": {
         "$type": "Vector3Data, Assembly-CSharp",
-        "x": -3.207904,
-        "y": 0.08000016,
-        "z": 1.38368475
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
       },
       "_rotation": {
         "$type": "QuaternionData, Assembly-CSharp",
         "x": 0.0,
-        "y": -0.7071068,
+        "y": 1.0,
         "z": 0.0,
-        "w": 0.7071068
+        "w": 0.0
       },
       "_scale": {
         "$type": "Vector3Data, Assembly-CSharp",
@@ -61,7 +61,7 @@
     },
     {
       "$type": "PotionData, Assembly-CSharp",
-      "_nextSpawnTimer": -0.00196885,
+      "_nextSpawnTimer": -0.0446513146,
       "_healAmount": 2,
       "_id": "637f4e4695184fc6bec180cbbae88c39"
     }
