@@ -66,7 +66,7 @@ public static class SaveSystemManager
             values = new()
         };
         List<PureRawData> allData = new();
-        MetaData header = new MetaData
+        MetaData header = new()
         {
             SlotId = slotId,
             PlayerName = "Unknown",
@@ -184,7 +184,7 @@ public static class SaveSystemManager
     {
         var saveFiles = GetSlotInfos();
 
-        List<MetaData> headers = new List<MetaData>();
+        List<MetaData> headers = new();
 
         // Leggi tutti gli header dai file
         foreach (var file in saveFiles)

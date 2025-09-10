@@ -19,7 +19,7 @@ public static class SaveStorage
         if (!Directory.Exists(_rootPath))
             throw new DirectoryNotFoundException($"La cartella '{_rootPath}' non esiste.");
 
-        DirectoryInfo dir = new DirectoryInfo(_rootPath);
+        DirectoryInfo dir = new(_rootPath);
         return dir.GetFiles($"*.{extension}", SearchOption.TopDirectoryOnly);
     }
 
@@ -45,7 +45,7 @@ public static class SaveStorage
     public static List<PureRawData> ReadBytes(string slotId)
     {
         using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.OpenOrCreate));
-        return DataSerializer.BinaryDeserialize<List<PureRawData>>(reader);
+        return DataSerializer.BinaryDeserialize<List<PureRawData>>(reader, true);
     }
 
     public static string ReadJson(string slotId) =>
@@ -105,7 +105,7 @@ public static class SaveStorage
         var bytesHeader = DataSerializer.BytesSerialize(writer, header);
         var bytesData = DataSerializer.BytesSerialize(writer, datas);
 
-        //CloudSave.SaveDataAsBinary(slotId, bytesHeader, bytesData);
+        CloudSave.SaveDataAsBinary(slotId, bytesHeader, bytesData);
     }
     public static MetaData ReadBinaryHeader(string slotId)
     {

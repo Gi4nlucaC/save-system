@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -49,14 +50,35 @@ public static class CloudSave
         return docs;
     }
 
-    public static void LoadBinariesData()
+    public static List<CloudData> LoadBinariesData()
     {
         var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
         var sortDefinition = Builders<BsonDocument>.Sort.Descending("_id");
         var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
 
-        var first = docs[0];
-        //var header = DataSerializer.BinaryDeserialize<MetaData>()
+        List<CloudData> datas = new();
+
+        foreach (var item in docs)
+        {
+            CloudData data = new()
+            {
+                nameSlot = item.GetElement("nameSlot").Value.AsString
+            };
+
+            var headerBytes = item.GetElement("header").Value.AsBsonBinaryData.Bytes;
+            using MemoryStream headerStream = new(headerBytes);
+            using BinaryReader headerReader = new(headerStream);
+            data.header = DataSerializer.BinaryDeserialize<MetaData>(headerReader, false);
+
+            var dataBytes = item.GetElement("values").Value.AsBsonBinaryData.Bytes;
+            using MemoryStream dataStream = new(dataBytes);
+            using BinaryReader dataReader = new(dataStream);
+            data.values = DataSerializer.BinaryDeserialize<List<PureRawData>>(dataReader, false);
+
+            datas.Add(data);
+        }
+
+        return datas;
     }
 
     public static void SaveData(CloudData data)

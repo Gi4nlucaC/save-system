@@ -66,14 +66,23 @@ public static class DataSerializer
 
     public static Type[] GetTypesToRegister() => TypeById;
 
-    public static T BinaryDeserialize<T>(BinaryReader reader)
+    public static T BinaryDeserialize<T>(BinaryReader reader, bool hasHeader)
     {
-        int headerSize = reader.ReadInt32();
-        reader.BaseStream.Seek(headerSize, SeekOrigin.Current);
+        if (hasHeader)
+        {
+            int headerSize = reader.ReadInt32();
+            reader.BaseStream.Seek(headerSize, SeekOrigin.Current);
+        }
 
         int dataSize = reader.ReadInt32();
         byte[] dataBytes = reader.ReadBytes(dataSize);
         string dataJson = System.Text.Encoding.UTF8.GetString(dataBytes);
+
+        if (!dataJson.StartsWith("{"))
+        {
+            dataJson = dataJson.Insert(0, "{\r\n");
+        }
+
         return Deserialize<T>(dataJson);
     }
 

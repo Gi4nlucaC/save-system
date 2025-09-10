@@ -31,6 +31,7 @@ public class MainMenuComponent : MonoBehaviour
         //_continueButton.gameObject.SetActive(false);
     }
 
+
     public void Bootstrap()
     {
         //get the files first from the cloud
@@ -49,14 +50,10 @@ public class MainMenuComponent : MonoBehaviour
         //SaveSystemManager.OnLoadData(lastSlot);
         //SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
 
-        var cloudSavings = CloudSave.LoadData();
+        var cloudSavings = CloudSave.LoadBinariesData();
         if (cloudSavings.Count > 0)
         {
-            foreach (var item in cloudSavings)
-            {
-
-            }
-
+            SaveSystemManager.OnCloudLoadData(cloudSavings[0].values);
         }
         else
         {
