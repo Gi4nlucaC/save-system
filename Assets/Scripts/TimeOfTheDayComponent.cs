@@ -80,6 +80,9 @@ public class TimeOfTheDayComponent : SavableMonoBehaviour, IHeaderSavable
         }
         else
             _timeDateData = new(_persistentId.Value, Days.Monday, 7, 0);
+
+        _dayText.text = currentDay.ToString();
+        _timeText.text = $"{hour:D2}:{minute:D2}";
     }
 
     public override void DeleteData()
