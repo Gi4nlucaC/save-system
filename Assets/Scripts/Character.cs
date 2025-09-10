@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Character : SavableMonoBehaviour
+public class Character : SavableMonoBehaviour, IHeaderSavable
 {
     CharacterData _characterData;
     MovementComponent _movementComponent;
@@ -181,5 +181,12 @@ public class Character : SavableMonoBehaviour
     public override void DeleteData()
     {
         throw new System.NotImplementedException();
+    }
+
+    public MetaData GetMetaDataPart()
+    {
+        var meta = new MetaData();
+        meta.PlayerName = _characterData._name;
+        return meta;
     }
 }

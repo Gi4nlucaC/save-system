@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 
 [DataTypeId(3)]
-public class CharacterData : PhysicalEntityData, IHeaderSavable
+public class CharacterData : PhysicalEntityData
 {
     public int _hp = 1;
     public int _exp = 0;
@@ -42,8 +42,4 @@ public class CharacterData : PhysicalEntityData, IHeaderSavable
         this._exp = (int)(exp.HasValue ? exp : this._exp);
         this._lvl = 1;
     }
-    public MetaData GetMetaDataPart() => new MetaData
-    {
-        PlayerName = _name
-    };
 }

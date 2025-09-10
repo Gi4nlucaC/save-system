@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class TimeOfTheDayComponent : SavableMonoBehaviour
+public class TimeOfTheDayComponent : SavableMonoBehaviour, IHeaderSavable
 {
     [SerializeField] TMP_Text _dayText;
     [SerializeField] TMP_Text _timeText;
@@ -90,5 +90,14 @@ public class TimeOfTheDayComponent : SavableMonoBehaviour
     public override void SnapshotData()
     {
         _timeDateData.UpdateData(currentDay, hour, minute);
+    }
+
+    public MetaData GetMetaDataPart()
+    {
+        var meta = new MetaData();
+        meta.Day = _timeDateData._day;
+        meta.Hours = _timeDateData._hours;
+        meta.Minutes = _timeDateData._minutes;
+        return meta;
     }
 }

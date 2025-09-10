@@ -77,20 +77,11 @@ public static class SaveSystemManager
             var data = savable.SaveData();
             allData.Add(data);
 
-            // aggiorna header se lo savable contribuisce
             if (savable is IHeaderSavable headerSavable)
             {
                 var metaPart = headerSavable.GetMetaDataPart();
-                if (metaPart == null) continue;
-
-                if (!string.IsNullOrEmpty(metaPart.PlayerName))
-                    header.PlayerName = metaPart.PlayerName;
-
-                header.Day = metaPart.Day;
-                header.Hours = metaPart.Hours;
-                header.Minutes = metaPart.Minutes;
-
-                header.PlayTimeSeconds = metaPart.PlayTimeSeconds;
+                if (metaPart != null)
+                    header.Merge(metaPart);
             }
         }
 
