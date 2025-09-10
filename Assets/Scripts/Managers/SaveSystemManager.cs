@@ -60,91 +60,46 @@ public static class SaveSystemManager
             nameSlot = slotId,
             values = new()
         };
-
-        for (int i = 0; i < _savableItems.Count; i++)
+        List<PureRawData> allData = new();
+        MetaData header = new MetaData
         {
-            ISavable savable = _savableItems[i];
-            datas.values.Add(savable.SaveData());
+            SlotId = slotId,
+            PlayerName = "Unknown",
+            PlayTimeSeconds = 0,
+            Day = Days.Monday,
+            Hours = 0,
+            Minutes = 0
+        };
+
+        foreach (var savable in _savableItems)
+        {
+            // salva i dati
+            var data = savable.SaveData();
+            allData.Add(data);
+
+            // aggiorna header se lo savable contribuisce
+            if (savable is IHeaderSavable headerSavable)
+            {
+                var metaPart = headerSavable.GetMetaDataPart();
+                if (metaPart == null) continue;
+
+                if (!string.IsNullOrEmpty(metaPart.PlayerName))
+                    header.PlayerName = metaPart.PlayerName;
+
+                header.Day = metaPart.Day;
+                header.Hours = metaPart.Hours;
+                header.Minutes = metaPart.Minutes;
+
+                header.PlayTimeSeconds = metaPart.PlayTimeSeconds;
+            }
         }
 
         if (_serializationMode == SerializationMode.Json)
-        {
-            // Costruisci i dati da salvare
-            List<PureRawData> datas = new();
-            for (int i = 0; i < _savableItems.Count; i++)
-                datas.Add(_savableItems[i].SaveData());
-
-            // Costruisci un header MetaData
-            MetaData header = new MetaData
-            {
-                SlotId = slotId,
-                PlayerName = "Unknown",
-                PlayTimeSeconds = 0,
-                Day = Days.Monday,
-                Hours = 0,
-                Minutes = 0
-            };
-
-            int canBreak = 0;
-            foreach (var data in datas)
-            {
-                if (data is CharacterData character && !string.IsNullOrEmpty(character._name))
-                {
-                    header.PlayerName = character._name;
-                    canBreak++;
-                }
-                if (data is TimeDateData time)
-                {
-                    header.Day = time._day;
-                    header.Hours = time._hours;
-                    header.Minutes = time._minutes;
-                    canBreak++;
-                }
-                if (canBreak == 2) break;
-            }
-
-            SaveStorage.WriteJsonWithHeader(slotId, header, datas);
-            OnGameSavedManually?.Invoke();
-        }
+            SaveStorage.WriteJsonWithHeader(slotId, header, allData);
         else
-        {
+            SaveStorage.WriteBinariesWithHeader(slotId, header, allData);
 
-            MetaData header = new MetaData
-            {
-                SlotId = slotId,
-                PlayerName = "Unknown",
-                PlayTimeSeconds = 0,
-                Day = Days.Monday,
-                Hours = 0,
-                Minutes = 0
-            };
-
-            int canBreak = 0;
-
-            foreach (var data in datas.values)
-            {
-                if (data is CharacterData character && !string.IsNullOrEmpty(character._name))
-                {
-                    header.PlayerName = character._name;
-                    canBreak++;
-                }
-
-                if (data is TimeDateData time)
-                {
-                    header.Day = time._day;
-                    header.Hours = time._hours;
-                    header.Minutes = time._minutes;
-
-                    canBreak++;
-                }
-
-                if (canBreak == 2) break;
-            }
-
-            SaveStorage.WriteWithHeader(slotId, header, datas.values);
-
-            OnGameSavedManually?.Invoke();
-        }
+        OnGameSavedManually?.Invoke();
     }
 
     public static void OnLoadData(string slotId)
@@ -247,7 +202,7 @@ public static class SaveSystemManager
             }
             else
             {
-                header = SaveStorage.ReadHeader(slotId);
+                header = SaveStorage.ReadBinaryHeader(slotId);
             }
 
             if (header != null)

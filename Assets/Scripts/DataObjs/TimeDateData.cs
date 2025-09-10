@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 
 [DataTypeId(4)]
-public class TimeDateData : PureRawData
+public class TimeDateData : PureRawData, IHeaderSavable
 {
     public Days _day;
     public int _minutes;
@@ -25,5 +25,12 @@ public class TimeDateData : PureRawData
         this._hours = hours;
         this._minutes = minutes;
     }
+
+    public MetaData GetMetaDataPart() => new MetaData
+    {
+        Day = _day,
+        Hours = _hours,
+        Minutes = _minutes
+    };
 }
 

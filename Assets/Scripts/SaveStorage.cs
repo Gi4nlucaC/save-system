@@ -97,7 +97,7 @@ public static class SaveStorage
         string raw = File.ReadAllText(path);
         return DataSerializer.DeserializeWithHeader(raw);
     }
-    public static void WriteWithHeader(string slotId, MetaData header, List<PureRawData> datas)
+    public static void WriteBinariesWithHeader(string slotId, MetaData header, List<PureRawData> datas)
     {
         using FileStream fs = new FileStream(PathFor(slotId, "bin"), FileMode.Create, FileAccess.Write);
         using BinaryWriter writer = new BinaryWriter(fs);
@@ -113,7 +113,7 @@ public static class SaveStorage
 
         DataSerializer.BytesSerialize(writer, datas);
     }
-    public static MetaData ReadHeader(string slotId)
+    public static MetaData ReadBinaryHeader(string slotId)
     {
         string path = PathFor(slotId, "bin");
         if (!File.Exists(path)) return null;
