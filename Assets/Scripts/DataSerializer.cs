@@ -77,7 +77,7 @@ public static class DataSerializer
         return Deserialize<T>(dataJson);
     }
 
-    public static void BytesSerialize<T>(BinaryWriter writer, T data)
+    public static byte[] BytesSerialize<T>(BinaryWriter writer, T data)
     {
         string datas = JsonSerialize(data);
         byte[] dataBytes = System.Text.Encoding.UTF8.GetBytes(datas);
@@ -85,6 +85,7 @@ public static class DataSerializer
         writer.Write(dataBytes.Length);
         writer.Write(dataBytes);
 
+        return dataBytes;
     }
     #endregion
 }

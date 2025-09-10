@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using Unity.VisualScripting;
 
 public static class CloudSave
 {
@@ -48,6 +49,16 @@ public static class CloudSave
         return docs;
     }
 
+    public static void LoadBinariesData()
+    {
+        var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
+        var sortDefinition = Builders<BsonDocument>.Sort.Descending("_id");
+        var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
+
+        var first = docs[0];
+        //var header = DataSerializer.BinaryDeserialize<MetaData>()
+    }
+
     public static void SaveData(CloudData data)
     {
         var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
@@ -55,6 +66,20 @@ public static class CloudSave
         var filter = Builders<BsonDocument>.Filter.Eq("nameSlot", data.nameSlot);
 
         var update = Builders<BsonDocument>.Update.Set($"values", data.values);
+
+        // `IsUpsert = true` → se non trova nulla, crea un nuovo documento
+        var options = new UpdateOptions { IsUpsert = true };
+
+        collection.UpdateOne(filter, update, options);
+    }
+
+    public static void SaveDataAsBinary(string slotId, byte[] header, byte[] data)
+    {
+        var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
+
+        var filter = Builders<BsonDocument>.Filter.Eq("nameSlot", slotId);
+
+        var update = Builders<BsonDocument>.Update.Set($"header", new BsonBinaryData(header)).Set($"values", new BsonBinaryData(data));
 
         // `IsUpsert = true` → se non trova nulla, crea un nuovo documento
         var options = new UpdateOptions { IsUpsert = true };

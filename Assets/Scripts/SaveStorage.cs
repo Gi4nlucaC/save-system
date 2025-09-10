@@ -102,8 +102,10 @@ public static class SaveStorage
         using FileStream fs = new(PathFor(slotId, "bin"), FileMode.Create, FileAccess.Write);
         using BinaryWriter writer = new(fs);
 
-        DataSerializer.BytesSerialize(writer, header);
-        DataSerializer.BytesSerialize(writer, datas);
+        var bytesHeader = DataSerializer.BytesSerialize(writer, header);
+        var bytesData = DataSerializer.BytesSerialize(writer, datas);
+
+        //CloudSave.SaveDataAsBinary(slotId, bytesHeader, bytesData);
     }
     public static MetaData ReadBinaryHeader(string slotId)
     {
