@@ -104,7 +104,7 @@ public static class SaveStorage
 
         writer.Write(headerBytes);
 
-        writer.Write(datas.Count);
+        //writer.Write(datas.Count);
 
         DataSerializer.BytesSerialize(writer, datas);
     }

@@ -56,7 +56,12 @@ public static class DataSerializer
         int headerSize = reader.ReadInt32();
         reader.BaseStream.Seek(headerSize, SeekOrigin.Current);
 
-        int count = reader.ReadInt32();
+        int dataSize = reader.ReadInt32();
+        byte[] dataBytes = reader.ReadBytes(dataSize);
+        string dataJson = System.Text.Encoding.UTF8.GetString(dataBytes);
+        return Deserialize<List<PureRawData>>(dataJson);
+
+        /* int count = reader.ReadInt32();
         List<PureRawData> entities = new(count);
 
         for (int i = 0; i < count; i++)
@@ -103,12 +108,14 @@ public static class DataSerializer
             entities.Add(entity);
 
         }
-        return entities;
+        return entities; */
+
+
     }
 
     public static void BytesSerialize(BinaryWriter writer, List<PureRawData> data)
     {
-        foreach (var item in data)
+        /* foreach (var item in data)
         {
             var attr = (DataTypeIdAttribute)Attribute.GetCustomAttribute(item.GetType(), typeof(DataTypeIdAttribute));
             Debug.Log(item.GetType().ToString() + " " + attr.Id);
@@ -142,7 +149,14 @@ public static class DataSerializer
                     Debug.Log("Tipo non supportato: " + f.FieldType.Name);
                 //throw new Exception("Tipo non supportato: " + f.FieldType.Name);
             }
-        }
+        } */
+
+        string datas = JsonSerialize(data);
+        byte[] headerBytes = System.Text.Encoding.UTF8.GetBytes(datas);
+
+        writer.Write(headerBytes.Length);
+        writer.Write(headerBytes);
+
     }
     #endregion
 }
