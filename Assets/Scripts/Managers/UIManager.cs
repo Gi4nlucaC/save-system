@@ -58,7 +58,7 @@ public class UIManager : MonoBehaviour
     public void OnSavedSlotMenuCloseClicked()
     {
         SaveSystemManager.OnGameSavedManually -= OnGameSavedSucessfully;
-        SaveSystemManager.OnGameSavedManually -= OnSaveAndQuitSucessFully;
+        SaveSystemManager.OnGameSavedManually -= OnSaveAndQuitSucessfully;
 
         _savedSlotsPanel.ToggleVisibility();
     }
@@ -79,13 +79,13 @@ public class UIManager : MonoBehaviour
 
     public void OnSaveAndQuitButtonClicked()
     {
-        SaveSystemManager.OnGameSavedManually += OnSaveAndQuitSucessFully;
+        SaveSystemManager.OnGameSavedManually += OnSaveAndQuitSucessfully;
         _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
         _savedSlotsPanel.ToggleVisibility();
 
     }
 
-    void OnSaveAndQuitSucessFully()
+    void OnSaveAndQuitSucessfully()
     {
         ShowMessage("Game Saved. Quitting...");
         OnQuitGame?.Invoke();
@@ -94,8 +94,15 @@ public class UIManager : MonoBehaviour
 
     public void OnLoadButtonClicked()
     {
+        SaveSystemManager.OnAllSavablesLoaded += OnGameLoadedSucessfully;
         _savedSlotsPanel.RefreshList(UISlotsStates.LOAD);
         _savedSlotsPanel.ToggleVisibility();
+    }
+
+    void OnGameLoadedSucessfully()
+    {
+        SaveSystemManager.OnAllSavablesLoaded -= OnGameLoadedSucessfully;
+        Time.timeScale = 1;
     }
 
     public void OnQuitButtonClicked()
