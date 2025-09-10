@@ -45,6 +45,8 @@ public static class SaveSystemManager
             savedItem.LoadData();
         }
 
+        _savableItems.Clear();
+
         OnAllSavablesLoaded?.Invoke();
     }
 
@@ -200,7 +202,7 @@ public static class SaveSystemManager
                 headers.Add(header);
         }
 
-            return headers;
+        return headers;
     }
 
     public static string BuildDateString(MetaData meta)
