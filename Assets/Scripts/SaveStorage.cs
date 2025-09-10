@@ -45,7 +45,7 @@ public static class SaveStorage
     public static List<PureRawData> ReadBytes(string slotId)
     {
         using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.OpenOrCreate));
-        return DataSerializer.BinaryDeserialize(reader);
+        return DataSerializer.BinaryDeserialize<List<PureRawData>>(reader);
     }
 
     public static string ReadJson(string slotId) =>
@@ -99,18 +99,10 @@ public static class SaveStorage
     }
     public static void WriteBinariesWithHeader(string slotId, MetaData header, List<PureRawData> datas)
     {
-        using FileStream fs = new FileStream(PathFor(slotId, "bin"), FileMode.Create, FileAccess.Write);
-        using BinaryWriter writer = new BinaryWriter(fs);
+        using FileStream fs = new(PathFor(slotId, "bin"), FileMode.Create, FileAccess.Write);
+        using BinaryWriter writer = new(fs);
 
-        string headerJson = Newtonsoft.Json.JsonConvert.SerializeObject(header);
-        byte[] headerBytes = System.Text.Encoding.UTF8.GetBytes(headerJson);
-
-        writer.Write(headerBytes.Length);
-
-        writer.Write(headerBytes);
-
-        writer.Write(datas.Count);
-
+        DataSerializer.BytesSerialize(writer, header);
         DataSerializer.BytesSerialize(writer, datas);
     }
     public static MetaData ReadBinaryHeader(string slotId)
@@ -124,6 +116,6 @@ public static class SaveStorage
         int headerSize = reader.ReadInt32();
         byte[] headerBytes = reader.ReadBytes(headerSize);
         string headerJson = System.Text.Encoding.UTF8.GetString(headerBytes);
-        return Newtonsoft.Json.JsonConvert.DeserializeObject<MetaData>(headerJson);
+        return DataSerializer.Deserialize<MetaData>(headerJson);
     }
 }
