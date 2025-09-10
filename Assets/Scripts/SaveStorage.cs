@@ -109,6 +109,8 @@ public static class SaveStorage
 
         writer.Write(headerBytes);
 
+        writer.Write(datas.Count);
+
         DataSerializer.BytesSerialize(writer, datas);
     }
     public static MetaData ReadHeader(string slotId)
@@ -116,8 +118,8 @@ public static class SaveStorage
         string path = PathFor(slotId, "bin");
         if (!File.Exists(path)) return null;
 
-        using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-        using BinaryReader reader = new BinaryReader(fs);
+        using FileStream fs = new(path, FileMode.Open, FileAccess.Read);
+        using BinaryReader reader = new(fs);
 
         int headerSize = reader.ReadInt32();
         byte[] headerBytes = reader.ReadBytes(headerSize);

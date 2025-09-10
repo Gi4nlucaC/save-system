@@ -68,6 +68,9 @@ public static class DataSerializer
 
     public static List<PureRawData> BinaryDeserialize(BinaryReader reader)
     {
+        int headerSize = reader.ReadInt32();
+        reader.BaseStream.Seek(headerSize, SeekOrigin.Current);
+
         int count = reader.ReadInt32();
         List<PureRawData> entities = new(count);
 
@@ -113,6 +116,7 @@ public static class DataSerializer
             }
 
             entities.Add(entity);
+
         }
         return entities;
     }
@@ -122,6 +126,7 @@ public static class DataSerializer
         foreach (var item in data)
         {
             var attr = (DataTypeIdAttribute)Attribute.GetCustomAttribute(item.GetType(), typeof(DataTypeIdAttribute));
+            Debug.Log(item.GetType().ToString() + " " + attr.Id);
             if (attr == null)
                 throw new Exception("Entity senza EntityTypeId: " + item.GetType().Name);
 

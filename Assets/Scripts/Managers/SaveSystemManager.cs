@@ -141,7 +141,7 @@ public static class SaveSystemManager
                 if (canBreak == 2) break;
             }
 
-            SaveStorage.WriteWithHeader(slotId, header, datas);
+            SaveStorage.WriteWithHeader(slotId, header, datas.values);
 
             OnGameSavedManually?.Invoke();
         }
