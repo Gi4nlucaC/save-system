@@ -83,7 +83,7 @@ public static class SaveStorage
 
     public static void WriteJsonWithHeader(string slotId, MetaData header, List<PureRawData> datas)
     {
-        string path = PathFor(slotId, "json");
+        string path = PathFor(slotId, "sav");
 
         var json = DataSerializer.JsonSerializeWithHeader(header, datas);
         File.WriteAllText(path, json);
@@ -91,7 +91,7 @@ public static class SaveStorage
 
     public static SaveContainer ReadJsonWithHeader(string slotId)
     {
-        string path = PathFor(slotId, "json");
+        string path = PathFor(slotId, "sav");
         if (!File.Exists(path)) return null;
 
         string raw = File.ReadAllText(path);
