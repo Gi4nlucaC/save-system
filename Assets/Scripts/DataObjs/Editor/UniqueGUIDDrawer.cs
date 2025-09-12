@@ -1,31 +1,35 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using PeraphsPizza.SaveSystem;
 
-[CustomPropertyDrawer(typeof(UniqueGUID))]
-public class UniqueGUIDDrawer : PropertyDrawer
+namespace PeraphsPizza.SaveSystem.Editor
 {
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        => EditorGUIUtility.singleLineHeight;
-
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    [CustomPropertyDrawer(typeof(UniqueGUID))]
+    public class UniqueGUIDDrawer : PropertyDrawer
     {
-        var valueProp = property.FindPropertyRelative("_value");
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+            => EditorGUIUtility.singleLineHeight;
 
-        const float buttonWidth = 92f;
-        var fieldRect = new Rect(position.x, position.y, position.width - buttonWidth - 4f, position.height);
-        var buttonRect = new Rect(fieldRect.xMax + 4f, position.y, buttonWidth, position.height);
-
-        using (new EditorGUI.DisabledScope(true))
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.TextField(fieldRect, label, valueProp.stringValue);
-        }
+            var valueProp = property.FindPropertyRelative("_value");
 
-        string btnLabel = string.IsNullOrEmpty(valueProp.stringValue) ? "Generate" : "Regenerate";
-        if (GUI.Button(buttonRect, btnLabel))
-        {
-            valueProp.stringValue = System.Guid.NewGuid().ToString("N");
-            property.serializedObject.ApplyModifiedProperties();
+            const float buttonWidth = 92f;
+            var fieldRect = new Rect(position.x, position.y, position.width - buttonWidth - 4f, position.height);
+            var buttonRect = new Rect(fieldRect.xMax + 4f, position.y, buttonWidth, position.height);
+
+            using (new EditorGUI.DisabledScope(true))
+            {
+                EditorGUI.TextField(fieldRect, label, valueProp.stringValue);
+            }
+
+            string btnLabel = string.IsNullOrEmpty(valueProp.stringValue) ? "Generate" : "Regenerate";
+            if (GUI.Button(buttonRect, btnLabel))
+            {
+                valueProp.stringValue = System.Guid.NewGuid().ToString("N");
+                property.serializedObject.ApplyModifiedProperties();
+            }
         }
     }
 }

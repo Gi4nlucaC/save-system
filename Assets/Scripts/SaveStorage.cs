@@ -2,122 +2,120 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using PeraphsPizza.SaveSystem;
 
-public static class SaveStorage
+namespace PeraphsPizza.SaveSystem
 {
-    private static string _rootPath;
-
-    public static void Init(string path)
+    public static class SaveStorage
     {
-        _rootPath = String.IsNullOrEmpty(path) ? "Saves" : path;
-        if (!Directory.Exists(_rootPath))
-            Directory.CreateDirectory(_rootPath);
-    }
+        private static string _rootPath;
 
-    public static FileInfo[] CheckSaves(string extension)
-    {
-        if (!Directory.Exists(_rootPath))
-            throw new DirectoryNotFoundException($"La cartella '{_rootPath}' non esiste.");
+        public static void Init(string path)
+        {
+            _rootPath = String.IsNullOrEmpty(path) ? "Saves" : path;
+            if (!Directory.Exists(_rootPath))
+                Directory.CreateDirectory(_rootPath);
+        }
 
-        DirectoryInfo dir = new(_rootPath);
-        return dir.GetFiles($"*.{extension}", SearchOption.TopDirectoryOnly);
-    }
+        public static FileInfo[] CheckSaves(string extension)
+        {
+            if (!Directory.Exists(_rootPath))
+                throw new DirectoryNotFoundException($"The folder '{_rootPath}' does not exist.");
 
-    private static string PathFor(string slotId, string extension) =>
-        Path.Combine(_rootPath, $"{slotId}.{extension}");
+            DirectoryInfo dir = new(_rootPath);
+            return dir.GetFiles($"*.{extension}", SearchOption.TopDirectoryOnly);
+        }
 
-    public static void Write(string slotId, List<PureRawData> datas)
-    {
-        using BinaryWriter writer = new(File.Open(PathFor(slotId, "bin"), FileMode.Create));
-        writer.Write(datas.Count);
-        DataSerializer.BytesSerialize(writer, datas);
-    }
+        private static string PathFor(string slotId, string extension) =>
+            Path.Combine(_rootPath, $"{slotId}.{extension}");
 
-    public static void Write(string slotId, string content) =>
-        File.WriteAllText(PathFor(slotId, "sav"), content);
+        public static void Write(string slotId, List<PureRawData> datas)
+        {
+            using BinaryWriter writer = new(File.Open(PathFor(slotId, "bin"), FileMode.Create));
+            writer.Write(datas.Count);
+            DataSerializer.BytesSerialize(writer, datas);
+        }
 
-    public static async Task WriteAsync(string slotId, byte[] content) =>
-        await File.WriteAllBytesAsync(PathFor(slotId, "bin"), content);
+        public static void Write(string slotId, string content) =>
+            File.WriteAllText(PathFor(slotId, "sav"), content);
 
-    public static async Task WriteAsync(string slotId, string content) =>
-        await File.WriteAllTextAsync(PathFor(slotId, "sav"), content);
+        public static async Task WriteAsync(string slotId, byte[] content) =>
+            await File.WriteAllBytesAsync(PathFor(slotId, "bin"), content);
 
-    public static List<PureRawData> ReadBytes(string slotId)
-    {
-        using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.OpenOrCreate));
-        return DataSerializer.BinaryDeserialize<List<PureRawData>>(reader, true);
-    }
+        public static async Task WriteAsync(string slotId, string content) =>
+            await File.WriteAllTextAsync(PathFor(slotId, "sav"), content);
 
-    public static string ReadJson(string slotId) =>
-        File.Exists(PathFor(slotId, "sav")) ? File.ReadAllText(PathFor(slotId, "sav")) : null;
+        public static List<PureRawData> ReadBytes(string slotId)
+        {
+            using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.OpenOrCreate));
+            return DataSerializer.BinaryDeserialize<List<PureRawData>>(reader, true);
+        }
 
-    public static async Task<byte[]> ReadBytesAsync(string slotId)
-    {
-        string p = PathFor(slotId, "bin");
+        public static string ReadJson(string slotId) =>
+            File.Exists(PathFor(slotId, "sav")) ? File.ReadAllText(PathFor(slotId, "sav")) : null;
 
-        if (!File.Exists(p))
-            return null;
+        public static async Task<byte[]> ReadBytesAsync(string slotId)
+        {
+            string p = PathFor(slotId, "bin");
 
-        return await File.ReadAllBytesAsync(p);
-    }
+            if (!File.Exists(p))
+                return null;
 
-    public static async Task<string> ReadJsonAsync(string slotId)
-    {
-        string p = PathFor(slotId, "sav");
+            return await File.ReadAllBytesAsync(p);
+        }
 
-        if (!File.Exists(p))
-            return null;
+        public static async Task<string> ReadJsonAsync(string slotId)
+        {
+            string p = PathFor(slotId, "sav");
 
-        return await File.ReadAllTextAsync(p);
-    }
+            if (!File.Exists(p))
+                return null;
 
+            return await File.ReadAllTextAsync(p);
+        }
 
-    public static bool Exists(string slotId, string extension) =>
-        File.Exists(PathFor(slotId, extension));
+        public static bool Exists(string slotId, string extension) =>
+            File.Exists(PathFor(slotId, extension));
 
-    public static void Delete(string slotId, string extension)
-    {
-        string p = PathFor(slotId, extension);
-        if (File.Exists(p)) File.Delete(p);
-    }
+        public static void Delete(string slotId, string extension)
+        {
+            string p = PathFor(slotId, extension);
+            if (File.Exists(p)) File.Delete(p);
+        }
 
-    public static void WriteJsonWithHeader(string slotId, MetaData header, List<PureRawData> datas)
-    {
-        string path = PathFor(slotId, "sav");
+        public static void WriteJsonWithHeader(string slotId, MetaData header, List<PureRawData> data)
+        {
+            string json = DataSerializer.JsonSerializeWithHeader(header, data);
+            Write(slotId, json);
+        }
 
-        var json = DataSerializer.JsonSerializeWithHeader(header, datas);
-        File.WriteAllText(path, json);
-    }
+        public static SaveContainer ReadJsonWithHeader(string slotId)
+        {
+            string json = ReadJson(slotId);
+            if (json == null) return null;
+            return DataSerializer.DeserializeWithHeader(json);
+        }
 
-    public static SaveContainer ReadJsonWithHeader(string slotId)
-    {
-        string path = PathFor(slotId, "sav");
-        if (!File.Exists(path)) return null;
+        public static void WriteBinariesWithHeader(string slotId, MetaData header, List<PureRawData> data)
+        {
+            using BinaryWriter writer = new(File.Open(PathFor(slotId, "bin"), FileMode.Create));
 
-        string raw = File.ReadAllText(path);
-        return DataSerializer.DeserializeWithHeader(raw);
-    }
-    public static void WriteBinariesWithHeader(string slotId, MetaData header, List<PureRawData> datas)
-    {
-        using FileStream fs = new(PathFor(slotId, "bin"), FileMode.Create, FileAccess.Write);
-        using BinaryWriter writer = new(fs);
+            byte[] headerBytes = DataSerializer.ToByteArray(header);
+            writer.Write(headerBytes.Length);
+            writer.Write(headerBytes);
 
-        var bytesHeader = DataSerializer.BytesSerialize(writer, header);
-        var bytesData = DataSerializer.BytesSerialize(writer, datas);
+            DataSerializer.BytesSerialize(writer, data);
+        }
 
-        //CloudSave.SaveDataAsBinary(slotId, bytesHeader, bytesData);
-    }
-    public static MetaData ReadBinaryHeader(string slotId)
-    {
-        string path = PathFor(slotId, "bin");
-        if (!File.Exists(path)) return null;
+        public static MetaData ReadBinaryHeader(string slotId)
+        {
+            using BinaryReader reader = new(File.Open(PathFor(slotId, "bin"), FileMode.OpenOrCreate));
 
-        using FileStream fs = new(path, FileMode.Open, FileAccess.Read);
-        using BinaryReader reader = new(fs);
+            int headerSize = reader.ReadInt32();
+            byte[] headerBytes = reader.ReadBytes(headerSize);
+            string headerJson = System.Text.Encoding.UTF8.GetString(headerBytes);
 
-        int headerSize = reader.ReadInt32();
-        byte[] headerBytes = reader.ReadBytes(headerSize);
-        string headerJson = System.Text.Encoding.UTF8.GetString(headerBytes);
-        return DataSerializer.Deserialize<MetaData>(headerJson);
+            return DataSerializer.Deserialize<MetaData>(headerJson);
+        }
     }
 }

@@ -1,12 +1,16 @@
+using PeraphsPizza.SaveSystem;
 
-[DataTypeId(5)]
-public class PotionData : PureRawData
+namespace PeraphsPizza.SaveSystem
 {
-    public float _nextSpawnTimer;
-    public int _healAmount;
-
-    public void UpdateData(float spawnTimer)
+    [DataTypeId(5)]
+    public class PotionData : PureRawData
     {
-        this._nextSpawnTimer = spawnTimer;
+        public float _nextSpawnTimer;
+        public int _healAmount;
+
+        public void UpdateData(float spawnTimer)
+        {
+            this._nextSpawnTimer = spawnTimer;
+        }
     }
 }

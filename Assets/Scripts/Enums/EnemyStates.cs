@@ -1,7 +1,10 @@
-[System.Serializable]
-public enum EnemyStates : byte
+namespace PeraphsPizza.SaveSystem
 {
-    IDLE,
-    PATROL,
-    ATTACK
+    [System.Serializable]
+    public enum EnemyStates : byte
+    {
+        IDLE,
+        PATROL,
+        ATTACK
+    }
 }

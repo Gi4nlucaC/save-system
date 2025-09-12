@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PeraphsPizza.SaveSystem;
 
 public class MainMenuComponent : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class MainMenuComponent : MonoBehaviour
 
     void OnContinueButtonClicked()
     {
-        // TODO: prendi l�ultimo slot di salvataggio valido
+        // TODO: get the last valid save slot
         //SaveSystemManager.OnLoadData(lastSlot);
         //SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
         if (CloudSave.CloudDatas.Count > 0)

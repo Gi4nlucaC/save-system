@@ -4,112 +4,116 @@ using System.IO;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using PeraphsPizza.SaveSystem;
 
-public static class CloudSave
+namespace PeraphsPizza.SaveSystem
 {
-    private static IMongoDatabase _database;
-    private static string _userId;
-    private static List<CloudData> _cloudDatas;
-
-    public static List<CloudData> CloudDatas => _cloudDatas;
-
-    public static void Init(string username = "cloudsavesystem", string password = "vqppphJRNpG2vEIR", string clusterName = "modulicluster.h6cfk1e", string userId = "")
+    public static class CloudSave
     {
-        var client = new MongoClient($"mongodb+srv://{username}:{password}@{clusterName}.mongodb.net/");
-        _database = client.GetDatabase("SaveSystem");
-        _userId = userId;
-        RegisterClassMap();
+        private static IMongoDatabase _database;
+        private static string _userId;
+        private static List<CloudData> _cloudDatas;
 
-        _cloudDatas = LoadBinariesData();
-    }
+        public static List<CloudData> CloudDatas => _cloudDatas;
 
-    private static void RegisterClassMap()
-    {
-        var typesToRegister = DataSerializer.GetTypesToRegister();
-        for (int i = 0; i < typesToRegister.Length; i++)
+        public static void Init(string username = "cloudsavesystem", string password = "vqppphJRNpG2vEIR", string clusterName = "modulicluster.h6cfk1e", string userId = "")
         {
-            Type type = typesToRegister[i];
-            if (type == null) break;
+            var client = new MongoClient($"mongodb+srv://{username}:{password}@{clusterName}.mongodb.net/");
+            _database = client.GetDatabase("SaveSystem");
+            _userId = userId;
+            RegisterClassMap();
 
-            // Verifica che il tipo non sia già stato registrato per evitare errori
-            if (!BsonClassMap.IsClassMapRegistered(type))
+            _cloudDatas = LoadBinariesData();
+        }
+
+        private static void RegisterClassMap()
+        {
+            var typesToRegister = DataSerializer.GetTypesToRegister();
+            for (int i = 0; i < typesToRegister.Length; i++)
             {
-                BsonClassMap.LookupClassMap(type); // Registra automaticamente il tipo
+                Type type = typesToRegister[i];
+                if (type == null) break;
+
+                // Check that the type has not already been registered to avoid errors
+                if (!BsonClassMap.IsClassMapRegistered(type))
+                {
+                    BsonClassMap.LookupClassMap(type); // Register type automatically
+                }
             }
         }
-    }
 
-    public static List<BsonDocument> LoadData()
-    {
-        var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
-        var sortDefinition = Builders<BsonDocument>.Sort.Ascending("_id");
-        var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
-
-        /* BsonDocument doc = docs[slotId];
-        // Converto Bson -> JSON string
-        string json = doc.ToJson(); */
-
-        // Deserializzo in oggetto C#
-        //return DataSerializer.Deserialize<List<CloudData>>(docs.ToJson());
-        return docs;
-    }
-
-    public static List<CloudData> LoadBinariesData()
-    {
-        var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
-        var sortDefinition = Builders<BsonDocument>.Sort.Ascending("nameSlot");
-        var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
-
-        List<CloudData> datas = new();
-
-        foreach (var item in docs)
+        public static List<BsonDocument> LoadData()
         {
-            CloudData data = new()
-            {
-                nameSlot = item.GetElement("nameSlot").Value.AsString
-            };
+            var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
+            var sortDefinition = Builders<BsonDocument>.Sort.Ascending("_id");
+            var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
 
-            var headerBytes = item.GetElement("header").Value.AsBsonBinaryData.Bytes;
-            using MemoryStream headerStream = new(headerBytes);
-            using BinaryReader headerReader = new(headerStream);
-            data.header = DataSerializer.BinaryDeserialize<MetaData>(headerReader, false);
+            /* BsonDocument doc = docs[slotId];
+            // Convert Bson -> JSON string
+            string json = doc.ToJson(); */
 
-            var dataBytes = item.GetElement("values").Value.AsBsonBinaryData.Bytes;
-            using MemoryStream dataStream = new(dataBytes);
-            using BinaryReader dataReader = new(dataStream);
-            data.values = DataSerializer.BinaryDeserialize<List<PureRawData>>(dataReader, false);
-
-            datas.Add(data);
+            // Deserialize into C# object
+            //return DataSerializer.Deserialize<List<CloudData>>(docs.ToJson());
+            return docs;
         }
 
-        return datas;
-    }
+        public static List<CloudData> LoadBinariesData()
+        {
+            var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
+            var sortDefinition = Builders<BsonDocument>.Sort.Ascending("nameSlot");
+            var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
 
-    public static void SaveData(CloudData data)
-    {
-        var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
+            List<CloudData> datas = new();
 
-        var filter = Builders<BsonDocument>.Filter.Eq("nameSlot", data.nameSlot);
+            foreach (var item in docs)
+            {
+                CloudData data = new()
+                {
+                    nameSlot = item.GetElement("nameSlot").Value.AsString
+                };
 
-        var update = Builders<BsonDocument>.Update.Set($"values", data.values);
+                var headerBytes = item.GetElement("header").Value.AsBsonBinaryData.Bytes;
+                using MemoryStream headerStream = new(headerBytes);
+                using BinaryReader headerReader = new(headerStream);
+                data.header = DataSerializer.BinaryDeserialize<MetaData>(headerReader, false);
 
-        // `IsUpsert = true` → se non trova nulla, crea un nuovo documento
-        var options = new UpdateOptions { IsUpsert = true };
+                var dataBytes = item.GetElement("values").Value.AsBsonBinaryData.Bytes;
+                using MemoryStream dataStream = new(dataBytes);
+                using BinaryReader dataReader = new(dataStream);
+                data.values = DataSerializer.BinaryDeserialize<List<PureRawData>>(dataReader, false);
 
-        collection.UpdateOne(filter, update, options);
-    }
+                datas.Add(data);
+            }
 
-    public static void SaveDataAsBinary(string slotId, byte[] header, byte[] data)
-    {
-        var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
+            return datas;
+        }
 
-        var filter = Builders<BsonDocument>.Filter.Eq("nameSlot", slotId);
+        public static void SaveData(CloudData data)
+        {
+            var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
 
-        var update = Builders<BsonDocument>.Update.Set($"header", new BsonBinaryData(header)).Set($"values", new BsonBinaryData(data));
+            var filter = Builders<BsonDocument>.Filter.Eq("nameSlot", data.nameSlot);
 
-        // `IsUpsert = true` → se non trova nulla, crea un nuovo documento
-        var options = new UpdateOptions { IsUpsert = true };
+            var update = Builders<BsonDocument>.Update.Set($"values", data.values);
 
-        collection.UpdateOne(filter, update, options);
+            // `IsUpsert = true` → if it doesn't find anything, create a new document
+            var options = new UpdateOptions { IsUpsert = true };
+
+            collection.UpdateOne(filter, update, options);
+        }
+
+        public static void SaveDataAsBinary(string slotId, byte[] header, byte[] data)
+        {
+            var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
+
+            var filter = Builders<BsonDocument>.Filter.Eq("nameSlot", slotId);
+
+            var update = Builders<BsonDocument>.Update.Set($"header", new BsonBinaryData(header)).Set($"values", new BsonBinaryData(data));
+
+            // `IsUpsert = true` → if it doesn't find anything, create a new document
+            var options = new UpdateOptions { IsUpsert = true };
+
+            collection.UpdateOne(filter, update, options);
+        }
     }
 }

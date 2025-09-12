@@ -1,4 +1,5 @@
 using UnityEngine;
+using PeraphsPizza.SaveSystem;
 
 public class SlotContainerUI : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class SlotContainerUI : MonoBehaviour
 
             bool hasSave = saves != null && i < saves.Count;
 
-            // Aggiorna i valori UI
+            // Update UI values
             if (hasSave)
             {
                 var save = saves[i];

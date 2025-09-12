@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using PeraphsPizza.SaveSystem;
 
 public class Mimic : SavableMonoBehaviour
 {
@@ -70,7 +71,7 @@ public class Mimic : SavableMonoBehaviour
         {
             _characterController.Move(movement);
 
-            // Rotazione opzionale verso direzione
+            // Optional rotation towards direction
             Vector3 flat = new(movement.x, 0f, movement.z);
             if (flat.sqrMagnitude > 0.0001f)
                 transform.rotation = Quaternion.LookRotation(flat);

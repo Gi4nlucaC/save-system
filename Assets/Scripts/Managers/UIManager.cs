@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PeraphsPizza.SaveSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -85,28 +86,27 @@ public class UIManager : MonoBehaviour
 
     void OnSaveAndQuitSucessfully()
     {
-        ShowMessage("Game Saved. Quitting...");
-        SaveSystemManager.OnResetGame();
+        SaveSystemManager.OnGameSavedManually -= OnSaveAndQuitSucessfully;
+        SaveSystemManager.OnGameSavedManually -= OnGameSavedSucessfully;
         SceneManager.LoadScene(0);
     }
 
     public void OnLoadButtonClicked()
     {
-        SaveSystemManager.OnAllSavablesLoaded += OnGameLoadedSucessfully;
         _savedSlotsPanel.RefreshList(UISlotsStates.LOAD);
         _savedSlotsPanel.ToggleVisibility();
     }
 
-    void OnGameLoadedSucessfully()
-    {
-        SaveSystemManager.OnAllSavablesLoaded -= OnGameLoadedSucessfully;
-        Time.timeScale = 1;
-    }
-
     public void OnQuitButtonClicked()
     {
-        ShowMessage("Quitting Game...");
+        SaveSystemManager.OnResetGame();
+
         SceneManager.LoadScene(0);
+    }
+
+    void OnAutoSave()
+    {
+        ShowMessage("Autosave...");
     }
 
     void ShowMessage(string message)
@@ -116,34 +116,26 @@ public class UIManager : MonoBehaviour
 
         _currentMessageRoutine = StartCoroutine(ShowMessageRoutine(message));
     }
+
     IEnumerator ShowMessageRoutine(string message)
     {
-        _savingLoadingText.gameObject.SetActive(true);
         _savingLoadingText.text = message;
-
-        Color c = _savingLoadingText.color;
-        c.a = 1f;
-        _savingLoadingText.color = c;
+        _savingLoadingText.alpha = 1f;
 
         yield return new WaitForSeconds(_messageDuration);
 
-        // Fade out
-        float elapsed = 0f;
-        while (elapsed < _fadeDuration)
+        float elapsedTime = 0f;
+        float startAlpha = _savingLoadingText.alpha;
+
+        while (elapsedTime < _fadeDuration)
         {
-            elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, elapsed / _fadeDuration);
-            c.a = alpha;
-            _savingLoadingText.color = c;
+            elapsedTime += Time.unscaledDeltaTime;
+            float alpha = Mathf.Lerp(startAlpha, 0f, elapsedTime / _fadeDuration);
+            _savingLoadingText.alpha = alpha;
+
             yield return null;
         }
 
-        _savingLoadingText.gameObject.SetActive(false);
-        _currentMessageRoutine = null;
-    }
-
-    void OnAutoSave()
-    {
-        ShowMessage("Saving... Dont Turn OFF!");
+        _savingLoadingText.alpha = 0f;
     }
 }

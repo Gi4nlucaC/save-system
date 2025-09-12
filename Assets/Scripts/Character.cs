@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PeraphsPizza.SaveSystem;
 
 public class Character : SavableMonoBehaviour, IHeaderSavable
 {

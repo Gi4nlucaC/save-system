@@ -1,29 +1,32 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
-public class QuaternionData
+namespace PeraphsPizza.SaveSystem
 {
-    public float x, y, z, w;
-
-    [JsonConstructor]
-    public QuaternionData(Quaternion quaternion)
+    public class QuaternionData
     {
-        this.x = quaternion.x;
-        this.y = quaternion.y;
-        this.z = quaternion.z;
-        this.w = quaternion.w;
-    }
+        public float x, y, z, w;
 
-    public QuaternionData(float rX, float rY, float rZ, float rW)
-    {
-        this.x = rX;
-        this.y = rY;
-        this.z = rZ;
-        this.w = rX;
-    }
+        [JsonConstructor]
+        public QuaternionData(Quaternion quaternion)
+        {
+            this.x = quaternion.x;
+            this.y = quaternion.y;
+            this.z = quaternion.z;
+            this.w = quaternion.w;
+        }
 
-    public Quaternion ToQuaternion()
-    {
-        return new Quaternion(x, y, z, w);
+        public QuaternionData(float rX, float rY, float rZ, float rW)
+        {
+            this.x = rX;
+            this.y = rY;
+            this.z = rZ;
+            this.w = rW;
+        }
+
+        public Quaternion ToQuaternion()
+        {
+            return new Quaternion(x, y, z, w);
+        }
     }
 }

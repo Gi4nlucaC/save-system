@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public interface ISavableData
+namespace PeraphsPizza.SaveSystem
 {
-    public string SaveableId { get; set; }
+    public interface ISavableData
+    {
+        public string SaveableId { get; set; }
+    }
 }

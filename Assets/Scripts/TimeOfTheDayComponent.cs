@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using PeraphsPizza.SaveSystem;
 
 public class TimeOfTheDayComponent : SavableMonoBehaviour, IHeaderSavable
 {

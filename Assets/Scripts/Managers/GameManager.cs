@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using PeraphsPizza.SaveSystem;
 
 [DefaultExecutionOrder(-999999999)]
 public class GameManager : MonoBehaviour
@@ -14,8 +15,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         SaveSystemManager.OnAllSavablesLoaded += OnApplicationReady;
-        /* SaveStorage.Init("Saves");  //TODO DA TOGLIERE
-        SaveSystemManager.Init(SerializationMode.Json);     //TODO DA TOGLIERE */
+        /* SaveStorage.Init("Saves");  //TODO TO BE REMOVED
+        SaveSystemManager.Init(SerializationMode.Json);     //TODO TO BE REMOVED */
     }
 
     private void Start()

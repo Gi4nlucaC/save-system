@@ -1,6 +1,9 @@
-public enum UISlotsStates
-{ 
-    LOAD, 
-    OVERWRITE, 
-    DELETE 
-};
+namespace PeraphsPizza.SaveSystem
+{
+    public enum UISlotsStates
+    { 
+        LOAD, 
+        OVERWRITE, 
+        DELETE 
+    }
+}
