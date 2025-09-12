@@ -1,8 +1,11 @@
 using UnityEngine;
 
-[System.Serializable]
-[DataTypeId(0)]
-public class PureRawData
+namespace PeraphsPizza.SaveSystem
 {
-    public string _id;
+    [System.Serializable]
+    [DataTypeId(0)]
+    public class PureRawData
+    {
+        public string _id;
+    }
 }

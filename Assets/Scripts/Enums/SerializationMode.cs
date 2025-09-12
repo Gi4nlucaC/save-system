@@ -1,5 +1,8 @@
-public enum SerializationMode
+namespace PeraphsPizza.SaveSystem
 {
-    Json,
-    Binaries
+    public enum SerializationMode
+    {
+        Json,
+        Binaries
+    }
 }

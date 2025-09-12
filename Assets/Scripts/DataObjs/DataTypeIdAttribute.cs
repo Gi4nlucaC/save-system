@@ -1,12 +1,15 @@
 using System;
 
-[AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class DataTypeIdAttribute : Attribute
+namespace PeraphsPizza.SaveSystem
 {
-    public byte Id { get; }
-
-    public DataTypeIdAttribute(byte id)
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class DataTypeIdAttribute : Attribute
     {
-        Id = id;
+        public byte Id { get; }
+
+        public DataTypeIdAttribute(byte id)
+        {
+            Id = id;
+        }
     }
 }
