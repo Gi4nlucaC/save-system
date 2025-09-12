@@ -10,6 +10,7 @@ public static class SaveSystemManager
     static List<PureRawData> _savedEntities = new();
 
     static SerializationMode _serializationMode;
+    static bool _saveInCloud;
 
     public static event Action OnAllSavablesLoaded;
 
@@ -24,10 +25,10 @@ public static class SaveSystemManager
     };
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public static void Init(SerializationMode mode)
+    public static void Init(SerializationMode mode, bool saveInCloud)
     {
         _serializationMode = mode;
-        //OnLoadData("firstTest");
+        _saveInCloud = saveInCloud;
     }
 
     public static void RegisterSavable(ISavable savable)
@@ -60,11 +61,7 @@ public static class SaveSystemManager
 
     public static void OnSaveData(string slotId)
     {
-        CloudData datas = new()
-        {
-            nameSlot = slotId,
-            values = new()
-        };
+
         List<PureRawData> allData = new();
         MetaData header = new()
         {
@@ -90,10 +87,19 @@ public static class SaveSystemManager
             }
         }
 
-        if (_serializationMode == SerializationMode.Json)
-            SaveStorage.WriteJsonWithHeader(slotId, header, allData);
+        if (_saveInCloud)
+        {
+            CloudSave.SaveDataAsBinary(slotId,
+                DataSerializer.ToByteArray<MetaData>(header),
+                DataSerializer.ToByteArray<List<PureRawData>>(allData));
+        }
         else
-            SaveStorage.WriteBinariesWithHeader(slotId, header, allData);
+        {
+            if (_serializationMode == SerializationMode.Json)
+                SaveStorage.WriteJsonWithHeader(slotId, header, allData);
+            else
+                SaveStorage.WriteBinariesWithHeader(slotId, header, allData);
+        }
 
         OnGameSavedManually?.Invoke();
     }
@@ -182,27 +188,37 @@ public static class SaveSystemManager
 
     public static List<MetaData> GetSlotMetaInfo()
     {
-        var saveFiles = GetSlotInfos();
-
         List<MetaData> headers = new();
 
-        // Leggi tutti gli header dai file
-        foreach (var file in saveFiles)
+        if (_saveInCloud)
         {
-            string slotId = Path.GetFileNameWithoutExtension(file.Name);
-            MetaData header = null;
-            if (_serializationMode == SerializationMode.Json)
+            foreach (var item in CloudSave.CloudDatas)
             {
-                var container = SaveStorage.ReadJsonWithHeader(slotId);
-                if (container != null) header = container.Header;
+                headers.Add(item.header);
             }
-            else
-            {
-                header = SaveStorage.ReadBinaryHeader(slotId);
-            }
+        }
+        else
+        {
+            var saveFiles = GetSlotInfos();
 
-            if (header != null)
-                headers.Add(header);
+            // Leggi tutti gli header dai file
+            foreach (var file in saveFiles)
+            {
+                string slotId = Path.GetFileNameWithoutExtension(file.Name);
+                MetaData header = null;
+                if (_serializationMode == SerializationMode.Json)
+                {
+                    var container = SaveStorage.ReadJsonWithHeader(slotId);
+                    if (container != null) header = container.Header;
+                }
+                else
+                {
+                    header = SaveStorage.ReadBinaryHeader(slotId);
+                }
+
+                if (header != null)
+                    headers.Add(header);
+            }
         }
 
         return headers;

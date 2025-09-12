@@ -49,11 +49,9 @@ public class MainMenuComponent : MonoBehaviour
         // TODO: prendi l�ultimo slot di salvataggio valido
         //SaveSystemManager.OnLoadData(lastSlot);
         //SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
-
-        var cloudSavings = CloudSave.LoadBinariesData();
-        if (cloudSavings.Count > 0)
+        if (CloudSave.CloudDatas.Count > 0)
         {
-            SaveSystemManager.OnCloudLoadData(cloudSavings[0].values);
+            SaveSystemManager.OnCloudLoadData(CloudSave.CloudDatas[0].values);
         }
         else
         {

@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class SlotsManager : MonoBehaviour
 {
     [SerializeField] UniqueGUID _userId;
+    [SerializeField] bool _saveInCloud;
+    [SerializeField] private string _username;
+    [SerializeField] private string _password;
+    [SerializeField] private string _clusterName;
     [SerializeField] SerializationMode _serializationType;
     [SerializeField] string _folderName;
 
@@ -15,8 +16,10 @@ public class SlotsManager : MonoBehaviour
 
     private void Awake()
     {
-        CloudSave.Init(userId: _userId.Value);
-        SaveSystemManager.Init(_serializationType);
+        if (_saveInCloud)
+            CloudSave.Init(userId: _userId.Value);
+
+        SaveSystemManager.Init(_serializationType, _saveInCloud);
         SaveStorage.Init(_folderName);
 
         _lastSlotSaved = SaveSystemManager.GetLastSlotSaved();

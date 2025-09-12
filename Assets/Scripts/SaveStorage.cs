@@ -105,7 +105,7 @@ public static class SaveStorage
         var bytesHeader = DataSerializer.BytesSerialize(writer, header);
         var bytesData = DataSerializer.BytesSerialize(writer, datas);
 
-        CloudSave.SaveDataAsBinary(slotId, bytesHeader, bytesData);
+        //CloudSave.SaveDataAsBinary(slotId, bytesHeader, bytesData);
     }
     public static MetaData ReadBinaryHeader(string slotId)
     {

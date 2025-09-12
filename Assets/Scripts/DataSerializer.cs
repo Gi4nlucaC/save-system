@@ -88,13 +88,18 @@ public static class DataSerializer
 
     public static byte[] BytesSerialize<T>(BinaryWriter writer, T data)
     {
-        string datas = JsonSerialize(data);
-        byte[] dataBytes = System.Text.Encoding.UTF8.GetBytes(datas);
+        byte[] dataBytes = ToByteArray(data);
 
         writer.Write(dataBytes.Length);
         writer.Write(dataBytes);
 
         return dataBytes;
+    }
+
+    public static byte[] ToByteArray<T>(T data)
+    {
+        string datas = JsonSerialize(data);
+        return System.Text.Encoding.UTF8.GetBytes(datas);
     }
     #endregion
 }

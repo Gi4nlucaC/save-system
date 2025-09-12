@@ -4,12 +4,14 @@ using System.IO;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using Unity.VisualScripting;
 
 public static class CloudSave
 {
     private static IMongoDatabase _database;
     private static string _userId;
+    private static List<CloudData> _cloudDatas;
+
+    public static List<CloudData> CloudDatas => _cloudDatas;
 
     public static void Init(string username = "cloudsavesystem", string password = "vqppphJRNpG2vEIR", string clusterName = "modulicluster.h6cfk1e", string userId = "")
     {
@@ -17,6 +19,8 @@ public static class CloudSave
         _database = client.GetDatabase("SaveSystem");
         _userId = userId;
         RegisterClassMap();
+
+        _cloudDatas = LoadBinariesData();
     }
 
     private static void RegisterClassMap()
@@ -38,7 +42,7 @@ public static class CloudSave
     public static List<BsonDocument> LoadData()
     {
         var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
-        var sortDefinition = Builders<BsonDocument>.Sort.Descending("_id");
+        var sortDefinition = Builders<BsonDocument>.Sort.Ascending("_id");
         var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
 
         /* BsonDocument doc = docs[slotId];
@@ -53,7 +57,7 @@ public static class CloudSave
     public static List<CloudData> LoadBinariesData()
     {
         var collection = _database.GetCollection<BsonDocument>($"{_userId}_Slots");
-        var sortDefinition = Builders<BsonDocument>.Sort.Descending("_id");
+        var sortDefinition = Builders<BsonDocument>.Sort.Ascending("nameSlot");
         var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
 
         List<CloudData> datas = new();
