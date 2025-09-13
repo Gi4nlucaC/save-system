@@ -1,0 +1,37 @@
+{
+  "name": "com.savesystem.core",
+  "version": "1.0.0",
+  "displayName": "Save System",
+  "description": "A comprehensive save system for Unity with local and cloud storage support. Features binary and JSON serialization, automatic save management, and MongoDB cloud integration.",
+  "unity": "2021.3",
+  "unityRelease": "0f1",
+  "keywords": [
+    "save",
+    "system",
+    "persistence",
+    "cloud",
+    "mongodb",
+    "serialization",
+    "data"
+  ],
+  "author": {
+    "name": "Save System Team",
+    "email": "contact@savesystem.dev"
+  },
+  "category": "System",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  },
+  "samples": [
+    {
+      "displayName": "Basic Save System",
+      "description": "Basic implementation showing how to save and load game data",
+      "path": "Samples~/BasicSaveSystem"
+    },
+    {
+      "displayName": "Cloud Save Integration",
+      "description": "Example of MongoDB cloud save integration",
+      "path": "Samples~/CloudSaveExample"
+    }
+  ]
+}
