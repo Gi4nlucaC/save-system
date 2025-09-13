@@ -1,13 +1,16 @@
 using UnityEngine;
 
-[System.Serializable]
-public enum Days : byte
+namespace PizzaCompany.SaveSystem
 {
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday
+    [System.Serializable]
+    public enum Days : byte
+    {
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        Sunday
+    }
 }

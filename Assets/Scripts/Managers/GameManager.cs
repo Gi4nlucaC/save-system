@@ -1,55 +1,57 @@
 using System.Collections;
 using UnityEngine;
+using PizzaCompany.SaveSystem;
 
-[DefaultExecutionOrder(-999999999)]
-public class GameManager : MonoBehaviour
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] Character _player;
-
-    [SerializeField] float tickTime = 3f;
-    [SerializeField] int damagePerTick = 1;
-
-    [SerializeField] float autoSaveInterval = 30f;
-
-    private void Awake()
+    [DefaultExecutionOrder(-999999999)]
+    public class GameManager : MonoBehaviour
     {
-        SaveSystemManager.OnAllSavablesLoaded += OnApplicationReady;
-        /* SaveStorage.Init("Saves");  //TODO DA TOGLIERE
-        SaveSystemManager.Init(SerializationMode.Json);     //TODO DA TOGLIERE */
-    }
+        [SerializeField] Character _player;
 
-    private void Start()
-    {
-        SaveSystemManager.LoadAllSavable();
+        [SerializeField] float tickTime = 3f;
+        [SerializeField] int damagePerTick = 1;
 
-        StartCoroutine(AutoSaveRoutine());
-    }
-    private void OnApplicationReady()
-    {
-        if (_player != null)
-            StartCoroutine(LifeExpRoutine());
-    }
+        [SerializeField] float autoSaveInterval = 30f;
 
-    private IEnumerator LifeExpRoutine()
-    {
-        while (_player != null && !_player.IsDead())
+        private void Awake()
         {
-            _player.TakeDamage(damagePerTick);
-
-            int expGain = Random.Range(1, 11);
-            _player.AddExp(expGain);
-
-            yield return new WaitForSeconds(tickTime);
+            SaveSystemManager.OnAllSavablesLoaded += OnApplicationReady;
         }
-    }
 
-    private IEnumerator AutoSaveRoutine()
-    {
-        while (true)
+        private void Start()
         {
-            yield return new WaitForSeconds(autoSaveInterval);
+            SaveSystemManager.LoadAllSavable();
 
-            SaveSystemManager.AutoSave("AUTOSAVE");
+            StartCoroutine(AutoSaveRoutine());
+        }
+        private void OnApplicationReady()
+        {
+            if (_player != null)
+                StartCoroutine(LifeExpRoutine());
+        }
+
+        private IEnumerator LifeExpRoutine()
+        {
+            while (_player != null && !_player.IsDead())
+            {
+                _player.TakeDamage(damagePerTick);
+
+                int expGain = Random.Range(1, 11);
+                _player.AddExp(expGain);
+
+                yield return new WaitForSeconds(tickTime);
+            }
+        }
+
+        private IEnumerator AutoSaveRoutine()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(autoSaveInterval);
+
+                SaveSystemManager.AutoSave("AUTOSAVE");
+            }
         }
     }
 }

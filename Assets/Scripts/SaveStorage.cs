@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
+namespace PizzaCompany.SaveSystem
+{
 public static class SaveStorage
 {
     private static string _rootPath;
@@ -120,4 +122,5 @@ public static class SaveStorage
         string headerJson = System.Text.Encoding.UTF8.GetString(headerBytes);
         return DataSerializer.Deserialize<MetaData>(headerJson);
     }
+}
 }

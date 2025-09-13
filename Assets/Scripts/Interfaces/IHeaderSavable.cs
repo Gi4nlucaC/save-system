@@ -1,4 +1,7 @@
-public interface IHeaderSavable
+namespace PizzaCompany.SaveSystem
 {
-    MetaData GetMetaDataPart();
+    public interface IHeaderSavable
+    {
+        MetaData GetMetaDataPart();
+    }
 }

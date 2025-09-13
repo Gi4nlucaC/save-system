@@ -1,11 +1,13 @@
 using UnityEngine;
 
-[DataTypeId(1)]
-public class PhysicalEntityData : PureRawData
+namespace PizzaCompany.SaveSystem
 {
-    public string _name;
-    public Vector3Data _position;
-    public QuaternionData _rotation;
-    public Vector3Data _scale;
-
+    [DataTypeId(1)]
+    public class PhysicalEntityData : PureRawData
+    {
+        public string _name;
+        public Vector3Data _position;
+        public QuaternionData _rotation;
+        public Vector3Data _scale;
+    }
 }

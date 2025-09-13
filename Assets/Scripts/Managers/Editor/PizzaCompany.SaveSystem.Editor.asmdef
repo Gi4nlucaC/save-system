@@ -1,0 +1,16 @@
+{
+  "name": "PizzaCompany.SaveSystem.Editor",
+  "rootNamespace": "PizzaCompany.SaveSystem",
+  "references": [
+    "PizzaCompany.SaveSystem.Runtime"
+  ],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

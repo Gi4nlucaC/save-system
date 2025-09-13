@@ -1,107 +1,97 @@
 using System.Collections;
 using UnityEngine;
 
-public class Mimic : SavableMonoBehaviour
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] CharacterController _characterController;
-    MovementComponent _movementComponent;
-    EnemyData _enemyData;
-
-    [Header("Random Movement")]
-    [SerializeField] float minInterval = 0.6f;
-    [SerializeField] float maxInterval = 1.8f;
-    [SerializeField] float idleChance = 0.25f;
-    Vector2 _currentInput;
-    Coroutine _inputRoutine;
-
-    void Awake()
+    public class Mimic : SavableMonoBehaviour
     {
-        _movementComponent = new MovementComponent(1f);
-        RegisterForSave();
-    }
+        [SerializeField] CharacterController _characterController;
+        MovementComponent _movementComponent;
+        EnemyData _enemyData;
 
-    // Update is called once per frame
-    void Update()
-    {
-        HandleMovement();
-    }
+        [Header("Random Movement")]
+        [SerializeField] float minInterval = 0.6f;
+        [SerializeField] float maxInterval = 1.8f;
+        [SerializeField] float idleChance = 0.25f;
+        Vector2 _currentInput;
+        Coroutine _inputRoutine;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.TryGetComponent<Character>(out var character))
+        void Awake()
         {
-            character.TakeDamage(5);
-            Debug.Log("Gnam! the Mimic Bites U!");
+            _movementComponent = new MovementComponent(1f);
+            RegisterForSave();
         }
-    }
-    void OnEnable()
-    {
-        _inputRoutine = StartCoroutine(RandomInputRoutine());
-    }
 
-    void OnDisable()
-    {
-        StopCoroutine(_inputRoutine);
-    }
-
-    IEnumerator RandomInputRoutine()
-    {
-        var wait = new WaitForSeconds(1f);
-        while (true)
+        // Update is called once per frame
+        void Update()
         {
-            if (Random.value < idleChance)
-                _currentInput = Vector2.zero;
-            else
+            HandleMovement();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<Character>(out var character))
             {
-                Vector2 v = Random.insideUnitCircle;
-                if (v.sqrMagnitude > 0.0001f) v.Normalize();
-                _currentInput = v;
+                character.TakeDamage(5);
+                Debug.Log("Gnam! the Mimic Bites U!");
             }
-
-            float t = Random.Range(minInterval, maxInterval);
-            wait = new WaitForSeconds(t);
-            yield return wait;
         }
-    }
-    void HandleMovement()
-    {
-        Vector3 movement = _movementComponent.GetMovementVector(_currentInput, Time.deltaTime);
-        if (movement.sqrMagnitude > 0f)
+        void OnEnable()
         {
-            _characterController.Move(movement);
-
-            // Rotazione opzionale verso direzione
-            Vector3 flat = new(movement.x, 0f, movement.z);
-            if (flat.sqrMagnitude > 0.0001f)
-                transform.rotation = Quaternion.LookRotation(flat);
+            _inputRoutine = StartCoroutine(RandomInputRoutine());
         }
-    }
 
-    public override void SnapshotData()
-    {
-        _enemyData.UpdateData(transform.position, transform.rotation, transform.localScale);
-    }
-
-    public  override void DeleteData()
-    {
-
-    }
-
-    public override PureRawData SaveData()
-    {
-        SnapshotData();
-
-        return _enemyData;
-    }
-
-    public override void LoadData()
-    {
-        if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
+        void OnDisable()
         {
-            _enemyData = SaveSystemManager.GetData(_persistentId.Value) as EnemyData;
-            transform.SetPositionAndRotation(_enemyData._position.ToVector3(), _enemyData._rotation.ToQuaternion());
+            if (_inputRoutine != null) StopCoroutine(_inputRoutine);
         }
-        else
-            _enemyData = new(_persistentId.Value, "Mimic", transform.position, transform.rotation, transform.localScale, EnemyStates.IDLE);
+
+        IEnumerator RandomInputRoutine()
+        {
+            while (true)
+            {
+                if (Random.value < idleChance) _currentInput = Vector2.zero;
+                else
+                {
+                    Vector2 v = Random.insideUnitCircle;
+                    if (v.sqrMagnitude > 0.0001f) v.Normalize();
+                    _currentInput = v;
+                }
+                yield return new WaitForSeconds(Random.Range(minInterval, maxInterval));
+            }
+        }
+        void HandleMovement()
+        {
+            Vector3 movement = _movementComponent.GetMovementVector(_currentInput, Time.deltaTime);
+            if (movement.sqrMagnitude > 0f)
+            {
+                _characterController.Move(movement);
+
+                // Rotazione opzionale verso direzione
+                Vector3 flat = new(movement.x, 0f, movement.z);
+                if (flat.sqrMagnitude > 0.0001f)
+                    transform.rotation = Quaternion.LookRotation(flat);
+            }
+        }
+
+        public override void SnapshotData() => _enemyData.UpdateData(transform.position, transform.rotation, transform.localScale);
+        public override void DeleteData() { }
+
+        public override PureRawData SaveData()
+        {
+            SnapshotData();
+            return _enemyData;
+        }
+
+        public override void LoadData()
+        {
+            if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
+            {
+                _enemyData = SaveSystemManager.GetData(_persistentId.Value) as EnemyData;
+                transform.SetPositionAndRotation(_enemyData._position.ToVector3(), _enemyData._rotation.ToQuaternion());
+            }
+            else
+                _enemyData = new(_persistentId.Value, "Mimic", transform.position, transform.rotation, transform.localScale, EnemyStates.IDLE);
+        }
     }
 }

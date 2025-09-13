@@ -1,58 +1,60 @@
 using UnityEngine;
 
-public class SlotContainerUI : MonoBehaviour
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] SaveSlotUIComponent[] _saveSlots;
-    public void ToggleVisibility()
+    public class SlotContainerUI : MonoBehaviour
     {
-        gameObject.SetActive(!gameObject.activeSelf);
-    }
-
-    public void RefreshList(UISlotsStates state)
-    {
-        var saves = SaveSystemManager.GetSlotMetaInfo();
-
-        for (int i = 0; i < _saveSlots.Length; i++)
+        [SerializeField] SaveSlotUIComponent[] _saveSlots;
+        public void ToggleVisibility()
         {
-            SaveSlotUIComponent slotUi = _saveSlots[i];
+            gameObject.SetActive(!gameObject.activeSelf);
+        }
 
-            bool hasSave = saves != null && i < saves.Count;
+        public void RefreshList(UISlotsStates state)
+        {
+            var saves = SaveSystemManager.GetSlotMetaInfo();
 
-            // Aggiorna i valori UI
-            if (hasSave)
+            for (int i = 0; i < _saveSlots.Length; i++)
             {
-                var save = saves[i];
-                slotUi.UpdateUIValues(
-                    save.PlayerName,
-                    SaveSystemManager.FormatPlayTime(save.PlayTimeSeconds),
-                    SaveSystemManager.BuildDateString(save)
-                );
-            }
-            else
-            {
-                slotUi.SetSlotEmpty();
-                slotUi.SetInteractable(false);
-            }
+                SaveSlotUIComponent slotUi = _saveSlots[i];
 
-            RegisterSlotCallback(slotUi, state, hasSave ? saves[i].SlotId : i.ToString());
+                bool hasSave = saves != null && i < saves.Count;
+
+                // Aggiorna i valori UI
+                if (hasSave)
+                {
+                    var save = saves[i];
+                    slotUi.UpdateUIValues(
+                        save.PlayerName,
+                        SaveSystemManager.FormatPlayTime(save.PlayTimeSeconds),
+                        SaveSystemManager.BuildDateString(save)
+                    );
+                }
+                else
+                {
+                    slotUi.SetSlotEmpty();
+                    slotUi.SetInteractable(false);
+                }
+
+                RegisterSlotCallback(slotUi, state, hasSave ? saves[i].SlotId : i.ToString());
+            }
+        }
+
+        private void RegisterSlotCallback(SaveSlotUIComponent slotUi, UISlotsStates state, string slotId)
+        {
+            switch (state)
+            {
+                case UISlotsStates.LOAD:
+                    slotUi.RegisterForLoadSlot(slotId);
+                    break;
+                case UISlotsStates.OVERWRITE:
+                    slotUi.RegisterForOverwriteSlot(slotId);
+                    slotUi.SetInteractable(true);
+                    break;
+                case UISlotsStates.DELETE:
+                    slotUi.RegisterForDeleteSlot(slotId);
+                    break;
+            }
         }
     }
-
-    private void RegisterSlotCallback(SaveSlotUIComponent slotUi, UISlotsStates state, string slotId)
-    {
-        switch (state)
-        {
-            case UISlotsStates.LOAD:
-                slotUi.RegisterForLoadSlot(slotId);
-                break;
-            case UISlotsStates.OVERWRITE:
-                slotUi.RegisterForOverwriteSlot(slotId);
-                slotUi.SetInteractable(true);
-                break;
-            case UISlotsStates.DELETE:
-                slotUi.RegisterForDeleteSlot(slotId);
-                break;
-        }
-    }
-
 }

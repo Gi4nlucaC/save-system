@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 
-[System.Serializable]
-public class SaveContainer
+namespace PizzaCompany.SaveSystem
 {
-    public MetaData Header;
-    public List<PureRawData> Data;
+    [System.Serializable]
+    public class SaveContainer
+    {
+        public MetaData Header;
+        public List<PureRawData> Data;
+    }
 }

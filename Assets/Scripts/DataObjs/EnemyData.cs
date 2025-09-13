@@ -1,29 +1,32 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
-[DataTypeId(2)]
-public class EnemyData : PhysicalEntityData
+namespace PizzaCompany.SaveSystem
 {
-    EnemyStates _enemyState = EnemyStates.IDLE;
-
-    public EnemyData() { }
-
-    [JsonConstructor]
-    public EnemyData(string id, string name = "", Vector3 pos = new Vector3(), Quaternion rot = new Quaternion(), Vector3 scale = new Vector3(), EnemyStates enemyState = EnemyStates.IDLE)
+    [DataTypeId(2)]
+    public class EnemyData : PhysicalEntityData
     {
-        this._id = id;
-        this._name = name;
-        this._position = new(pos);
-        this._rotation = new(rot);
-        this._scale = new(scale);
-        this._enemyState = enemyState;
-    }
-    public void UpdateData(Vector3 pos, Quaternion rot, Vector3 scale, EnemyStates enemyState = EnemyStates.IDLE)
-    {
-        this._position = new(pos);
-        this._rotation = new(rot);
-        this._scale = new(scale);
+        EnemyStates _enemyState = EnemyStates.IDLE;
 
-        this._enemyState = enemyState;
+        public EnemyData() { }
+
+        [JsonConstructor]
+        public EnemyData(string id, string name = "", Vector3 pos = new Vector3(), Quaternion rot = new Quaternion(), Vector3 scale = new Vector3(), EnemyStates enemyState = EnemyStates.IDLE)
+        {
+            this._id = id;
+            this._name = name;
+            this._position = new(pos);
+            this._rotation = new(rot);
+            this._scale = new(scale);
+            this._enemyState = enemyState;
+        }
+        public void UpdateData(Vector3 pos, Quaternion rot, Vector3 scale, EnemyStates enemyState = EnemyStates.IDLE)
+        {
+            this._position = new(pos);
+            this._rotation = new(rot);
+            this._scale = new(scale);
+
+            this._enemyState = enemyState;
+        }
     }
 }

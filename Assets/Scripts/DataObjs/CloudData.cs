@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using MongoDB.Bson;
 
-public class CloudData
+namespace PizzaCompany.SaveSystem
 {
-    public string nameSlot;
-    public MetaData header;
-    public List<PureRawData> values;
+    public class CloudData
+    {
+        public string nameSlot;
+        public MetaData header;
+        public List<PureRawData> values;
+    }
 }

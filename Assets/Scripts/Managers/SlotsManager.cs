@@ -1,46 +1,83 @@
 using UnityEngine;
 
-public class SlotsManager : MonoBehaviour
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] UniqueGUID _userId;
-    [SerializeField] bool _saveInCloud;
-    [SerializeField] private string _username;
-    [SerializeField] private string _password;
-    [SerializeField] private string _clusterName;
-    [SerializeField] SerializationMode _serializationType;
-    [SerializeField] string _folderName;
-
-    private string _lastSlotSaved;
-
-    public string LastSlotSaved => _lastSlotSaved;
-
-    private void Awake()
+    public class SlotsManager : MonoBehaviour
     {
-        if (_saveInCloud)
-            CloudSave.Init(userId: _userId.Value);
+        [SerializeField] UniqueGUID _userId;
+        [SerializeField] bool _saveInCloud;
+        [SerializeField] CloudSaveCredentials _cloudCredentials; // secure asset (not versioned)
+        [SerializeField] string _databaseName = "SaveSystem";
+        [SerializeField] SerializationMode _serializationType;
+        [SerializeField] string _folderName = "Saves";
 
-        SaveSystemManager.Init(_serializationType, _saveInCloud);
-        SaveStorage.Init(_folderName);
+        string _lastSlotSaved;
+        public string LastSlotSaved => _lastSlotSaved;
 
-        _lastSlotSaved = SaveSystemManager.GetLastSlotSaved();
-    }
+        void Awake()
+        {
+            if (_saveInCloud)
+            {
+                var cfg = ResolveCloudConfig();
+                if (!string.IsNullOrEmpty(cfg.Username) && !string.IsNullOrEmpty(cfg.Password) && !string.IsNullOrEmpty(cfg.ClusterName))
+                {
+                    CloudSave.Init(cfg);
+                }
+#if UNITY_EDITOR
+                else
+                {
+                    Debug.LogWarning("[SaveSystem] Cloud credentials missing. CloudSave disabled.");
+                }
+#endif
+            }
+
+            SaveSystemManager.Init(_serializationType, _saveInCloud);
+            SaveStorage.Init(_folderName);
+            _lastSlotSaved = SaveSystemManager.GetLastSlotSaved();
+        }
+
+        CloudSave.CloudConfig ResolveCloudConfig()
+        {
+            // Priority: ScriptableObject > Environment Variables > empty (disabled)
+            if (_cloudCredentials != null && _cloudCredentials.HasValidCredentials)
+            {
+                return new CloudSave.CloudConfig
+                {
+                    Username = _cloudCredentials.Username,
+                    Password = _cloudCredentials.Password,
+                    ClusterName = _cloudCredentials.ClusterName,
+                    DatabaseName = _databaseName,
+                    UserId = _userId != null ? _userId.Value : string.Empty
+                };
+            }
+
+            // Environment variables (for CI/CD, Cloud Build, etc.)
+            string envUser = System.Environment.GetEnvironmentVariable("SAVE_SYSTEM_DB_USER");
+            string envPass = System.Environment.GetEnvironmentVariable("SAVE_SYSTEM_DB_PASS");
+            string envCluster = System.Environment.GetEnvironmentVariable("SAVE_SYSTEM_DB_CLUSTER");
+            if (!string.IsNullOrEmpty(envUser) && !string.IsNullOrEmpty(envPass) && !string.IsNullOrEmpty(envCluster))
+            {
+                return new CloudSave.CloudConfig
+                {
+                    Username = envUser,
+                    Password = envPass,
+                    ClusterName = envCluster,
+                    DatabaseName = _databaseName,
+                    UserId = _userId != null ? _userId.Value : string.Empty
+                };
+            }
+
+            return default; // empty -> skipped
+        }
 
 #if UNITY_EDITOR
-    [ExecuteInEditMode]
-    private void OnValidate()
-    {
-        Generate();
-    }
-
-    [ExecuteInEditMode]
-    private void Generate()
-    {
-        if (_userId == null)
-            _userId = new UniqueGUID();
-
-        if (!_userId.IsValid)
-            _userId.Set(System.Guid.NewGuid().ToString("N"));
-    }
+        [ExecuteInEditMode]
+        void OnValidate() { Generate(); }
+        void Generate()
+        {
+            if (_userId == null) _userId = new UniqueGUID();
+            if (!_userId.IsValid) _userId.Set(System.Guid.NewGuid().ToString("N"));
+        }
 #endif
-
+    }
 }

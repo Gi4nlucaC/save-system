@@ -1,67 +1,63 @@
-using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PizzaCompany.SaveSystem;
 
-public class ConfirmPanelUI : MonoBehaviour
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] Button _acceptButton;
-    [SerializeField] Button _declineButton;
-
-    [SerializeField] SlotContainerUI _saveSlotContainer;
-
-    private void Awake()
+    public class ConfirmPanelUI : MonoBehaviour
     {
-        _declineButton.onClick.AddListener(ToggleVisibility);
-    }
+        [SerializeField] Button _acceptButton;
+        [SerializeField] Button _declineButton;
+        [SerializeField] SlotContainerUI _saveSlotContainer;
 
-    public void Enable(UISlotsStates state, string ID)
-    {
-        RegisterOnAcceptButton(state, ID);
-        
-        ToggleVisibility();
-    }
-
-    private void OnDisable()
-    {
-        _acceptButton.onClick.RemoveAllListeners();
-    }
-
-    void RegisterOnAcceptButton(UISlotsStates state, string ID)
-    {
-        switch (state)
+        private void Awake()
         {
-            case UISlotsStates.LOAD:
-                break;
-            case UISlotsStates.OVERWRITE:
-                _acceptButton.onClick.AddListener(() => OnOverwriteConfirmClicked(ID));
-                break;
-            case UISlotsStates.DELETE:
-                _acceptButton.onClick.AddListener(() => OnDeleteConfirmClicked(ID));
-                break;
-            default:
-                break;
+            _declineButton.onClick.AddListener(ToggleVisibility);
         }
 
-    }
+        public void Enable(UISlotsStates state, string ID)
+        {
+            RegisterOnAcceptButton(state, ID);
+            ToggleVisibility();
+        }
 
-    void OnOverwriteConfirmClicked(string ID)
-    {
-        SaveSystemManager.OnSaveData(ID);
-        _saveSlotContainer.RefreshList(UISlotsStates.OVERWRITE);
-        ToggleVisibility();
-    }
+        private void OnDisable()
+        {
+            _acceptButton.onClick.RemoveAllListeners();
+        }
 
-    void OnDeleteConfirmClicked(string ID)
-    {
-        SaveSystemManager.DeleteData(ID);
-        _saveSlotContainer.RefreshList(UISlotsStates.DELETE);
-        ToggleVisibility();
-    }
+        void RegisterOnAcceptButton(UISlotsStates state, string ID)
+        {
+            switch (state)
+            {
+                case UISlotsStates.OVERWRITE:
+                    _acceptButton.onClick.AddListener(() => OnOverwriteConfirmClicked(ID));
+                    break;
+                case UISlotsStates.DELETE:
+                    _acceptButton.onClick.AddListener(() => OnDeleteConfirmClicked(ID));
+                    break;
+                default:
+                    break;
+            }
+        }
 
+        void OnOverwriteConfirmClicked(string ID)
+        {
+            SaveSystemManager.OnSaveData(ID);
+            _saveSlotContainer.RefreshList(UISlotsStates.OVERWRITE);
+            ToggleVisibility();
+        }
 
-    public void ToggleVisibility()
-    {
-        gameObject.SetActive(!gameObject.activeSelf);
+        void OnDeleteConfirmClicked(string ID)
+        {
+            SaveSystemManager.DeleteData(ID);
+            _saveSlotContainer.RefreshList(UISlotsStates.DELETE);
+            ToggleVisibility();
+        }
+
+        public void ToggleVisibility()
+        {
+            gameObject.SetActive(!gameObject.activeSelf);
+        }
     }
 }

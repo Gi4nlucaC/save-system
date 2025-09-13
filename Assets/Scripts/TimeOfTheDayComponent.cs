@@ -1,106 +1,62 @@
 using TMPro;
 using UnityEngine;
 
-public class TimeOfTheDayComponent : SavableMonoBehaviour, IHeaderSavable
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] TMP_Text _dayText;
-    [SerializeField] TMP_Text _timeText;
-
-    public Days currentDay = Days.Monday;
-    public int hour = 7;
-    public int minute = 0;
-
-    public float realSecondsPerGameMinute = 1f;
-
-    private float timer = 0f;
-
-    TimeDateData _timeDateData;
-
-    private void Awake()
+    public class TimeOfTheDayComponent : SavableMonoBehaviour, IHeaderSavable
     {
-        RegisterForSave();
-    }
+        [SerializeField] TMP_Text _dayText;
+        [SerializeField] TMP_Text _timeText;
 
-    void Update()
-    {
-        timer += Time.deltaTime;
+        public Days currentDay = Days.Monday;
+        public int hour = 7;
+        public int minute = 0;
 
-        if (timer >= realSecondsPerGameMinute)
+        public float realSecondsPerGameMinute = 1f;
+        float timer = 0f;
+
+        TimeDateData _timeDateData;
+
+        void Awake() => RegisterForSave();
+
+        void Update()
         {
-            timer = 0f;
-            AdvanceTime();
+            timer += Time.deltaTime;
+            if (timer >= realSecondsPerGameMinute)
+            { timer = 0f; AdvanceTime(); }
         }
-    }
 
-    void AdvanceTime()
-    {
-        minute++;
-
-        if (minute >= 60)
+        void AdvanceTime()
         {
-            minute = 0;
-            hour++;
-
-            if (hour >= 24)
+            minute++;
+            if (minute >= 60)
             {
-                hour = 0;
-                AdvanceDay();
+                minute = 0; hour++;
+                if (hour >= 24) { hour = 0; AdvanceDay(); }
             }
+            _dayText.text = currentDay.ToString();
+            _timeText.text = $"{hour:D2}:{minute:D2}";
         }
 
-        //Debug.Log($"{currentDay} {hour:D2}:{minute:D2}");
-        _dayText.text = currentDay.ToString();
-        _timeText.text = $"{hour:D2}:{minute:D2}";
-    }
+        void AdvanceDay() => currentDay = currentDay == Days.Sunday ? Days.Monday : currentDay + 1;
 
-    void AdvanceDay()
-    {
-        if (currentDay == Days.Sunday)
-            currentDay = Days.Monday;
-        else
-            currentDay++;
-    }
+        public override PureRawData SaveData() { SnapshotData(); return _timeDateData; }
 
-    public override PureRawData SaveData()
-    {
-        SnapshotData();
-
-        return _timeDateData;
-    }
-
-    public override void LoadData()
-    {
-        if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
+        public override void LoadData()
         {
-            _timeDateData = SaveSystemManager.GetData(_persistentId.Value) as TimeDateData;
-
-            currentDay = _timeDateData._day;
-            hour = _timeDateData._hours;
-            minute = _timeDateData._minutes;
+            if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
+            {
+                _timeDateData = SaveSystemManager.GetData(_persistentId.Value) as TimeDateData;
+                currentDay = _timeDateData._day; hour = _timeDateData._hours; minute = _timeDateData._minutes;
+            }
+            else _timeDateData = new(_persistentId.Value, Days.Monday, 7, 0);
+            _dayText.text = currentDay.ToString();
+            _timeText.text = $"{hour:D2}:{minute:D2}";
         }
-        else
-            _timeDateData = new(_persistentId.Value, Days.Monday, 7, 0);
 
-        _dayText.text = currentDay.ToString();
-        _timeText.text = $"{hour:D2}:{minute:D2}";
-    }
+        public override void DeleteData() { }
+        public override void SnapshotData() => _timeDateData.UpdateData(currentDay, hour, minute);
 
-    public override void DeleteData()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void SnapshotData()
-    {
-        _timeDateData.UpdateData(currentDay, hour, minute);
-    }
-
-    public MetaData GetMetaDataPart()
-    {
-        var meta = new MetaData();
-        meta.Day = _timeDateData._day;
-        meta.Hours = _timeDateData._hours;
-        meta.Minutes = _timeDateData._minutes;
-        return meta;
+        public MetaData GetMetaDataPart() => new MetaData { Day = _timeDateData._day, Hours = _timeDateData._hours, Minutes = _timeDateData._minutes };
     }
 }

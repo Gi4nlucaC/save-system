@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
+namespace PizzaCompany.SaveSystem
+{
 [DataTypeId(4)]
 public class TimeDateData : PureRawData
 {
@@ -25,5 +27,6 @@ public class TimeDateData : PureRawData
         this._hours = hours;
         this._minutes = minutes;
     }
+}
 }
 

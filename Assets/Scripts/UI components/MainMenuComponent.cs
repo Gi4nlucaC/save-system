@@ -1,90 +1,94 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using MongoDB.Bson;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PizzaCompany.SaveSystem;
 
-public class MainMenuComponent : MonoBehaviour
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] SlotsManager _slotManager;
-
-    [SerializeField] Button _continueButton;
-    [SerializeField] Button _newGameButton;
-    [SerializeField] Button _loadGameButton;
-    [SerializeField] Button _deleteSaveSlotButton;
-
-    [SerializeField] SlotContainerUI _savedSlotsPanel;
-    [SerializeField] Button _backToMenuButton;
-
-    private void Awake()
+    /// <summary>
+    /// Sample main menu component demonstrating how to integrate the Save System.
+    /// This script is included as an example UI and can be removed or replaced.
+    /// </summary>
+    public class MainMenuComponent : MonoBehaviour
     {
-        _newGameButton.onClick.AddListener(OnNewGameButtonClicked);
-        _loadGameButton.onClick.AddListener(OnLoadGameButtonClicked);
-        _deleteSaveSlotButton.onClick.AddListener(OnDeleteSaveSlotButtonClicked);
-        _backToMenuButton.onClick.AddListener(OnBackToMenuButtonClicked);
+        [SerializeField] SlotsManager _slotManager;
 
-        Bootstrap();
+        [SerializeField] Button _continueButton;
+        [SerializeField] Button _newGameButton;
+        [SerializeField] Button _loadGameButton;
+        [SerializeField] Button _deleteSaveSlotButton;
 
-        //_continueButton.gameObject.SetActive(false);
-    }
+        [SerializeField] SlotContainerUI _savedSlotsPanel;
+        [SerializeField] Button _backToMenuButton;
 
-
-    public void Bootstrap()
-    {
-        //get the files first from the cloud
-        if (String.IsNullOrEmpty(_slotManager.LastSlotSaved))//todo: if there's a save slot
+        private void Awake()
         {
-            _continueButton.onClick.AddListener(OnContinueButtonClicked);
-            _continueButton.gameObject.SetActive(true);
+            _newGameButton.onClick.AddListener(OnNewGameButtonClicked);
+            _loadGameButton.onClick.AddListener(OnLoadGameButtonClicked);
+            _deleteSaveSlotButton.onClick.AddListener(OnDeleteSaveSlotButtonClicked);
+            _backToMenuButton.onClick.AddListener(OnBackToMenuButtonClicked);
+
+            Bootstrap();
+
+            //_continueButton.gameObject.SetActive(false);
         }
 
-    }
 
-
-    void OnContinueButtonClicked()
-    {
-        // TODO: prendi l�ultimo slot di salvataggio valido
-        //SaveSystemManager.OnLoadData(lastSlot);
-        //SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
-        if (CloudSave.CloudDatas.Count > 0)
+        public void Bootstrap()
         {
-            SaveSystemManager.OnCloudLoadData(CloudSave.CloudDatas[0].values);
+            // Enable continue only if a previous slot exists (local or cloud)
+            if (String.IsNullOrEmpty(_slotManager.LastSlotSaved)) // TODO: refine logic based on real last valid slot
+            {
+                _continueButton.onClick.AddListener(OnContinueButtonClicked);
+                _continueButton.gameObject.SetActive(true);
+            }
+
         }
-        else
+
+
+        void OnContinueButtonClicked()
         {
-            SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
+            // Loads last known data (cloud preferred if any cached payload is present)
+            if (CloudSave.CloudDatas.Count > 0)
+            {
+                SaveSystemManager.OnCloudLoadData(CloudSave.CloudDatas[0].values);
+            }
+            else
+            {
+                SaveSystemManager.OnLoadData(_slotManager.LastSlotSaved);
+            }
+            SceneManager.LoadScene(1);
         }
-        SceneManager.LoadScene(1);
-    }
 
-    void OnNewGameButtonClicked()
-    {
-        SceneManager.LoadScene(1);
-    }
+        void OnNewGameButtonClicked()
+        {
+            SceneManager.LoadScene(1);
+        }
 
-    void OnLoadGameButtonClicked()
-    {
-        _savedSlotsPanel.RefreshList(UISlotsStates.LOAD);
-        _savedSlotsPanel.ToggleVisibility();
-    }
+        void OnLoadGameButtonClicked()
+        {
+            _savedSlotsPanel.RefreshList(UISlotsStates.LOAD);
+            _savedSlotsPanel.ToggleVisibility();
+        }
 
-    void OnOverwriteSaveSlotButtonClicked()
-    {
-        _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
-        _savedSlotsPanel.ToggleVisibility();
-    }
+        void OnOverwriteSaveSlotButtonClicked()
+        {
+            _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
+            _savedSlotsPanel.ToggleVisibility();
+        }
 
-    void OnDeleteSaveSlotButtonClicked()
-    {
-        _savedSlotsPanel.RefreshList(UISlotsStates.DELETE);
-        _savedSlotsPanel.ToggleVisibility();
-    }
+        void OnDeleteSaveSlotButtonClicked()
+        {
+            _savedSlotsPanel.RefreshList(UISlotsStates.DELETE);
+            _savedSlotsPanel.ToggleVisibility();
+        }
 
-    void OnBackToMenuButtonClicked()
-    {
-        _savedSlotsPanel.ToggleVisibility();
+        void OnBackToMenuButtonClicked()
+        {
+            _savedSlotsPanel.ToggleVisibility();
+        }
     }
 }

@@ -1,76 +1,76 @@
 using System;
 using UnityEngine;
 
-public class PotionSpawner : SavableMonoBehaviour
+namespace PizzaCompany.SaveSystem
 {
-    [SerializeField] float _spawnTimer;
-
-    PotionData _potionData;
-    float _nextSpawnTimer;
-    Collider _collider;
-
-    private void Awake()
+    public class PotionSpawner : SavableMonoBehaviour
     {
-        RegisterForSave();
+        [SerializeField] float _spawnTimer;
 
-        TryGetComponent<Collider>(out _collider);
-    }
+        PotionData _potionData;
+        float _nextSpawnTimer;
+        Collider _collider;
 
-    private void Update()
-    {
-        if (_nextSpawnTimer > 0)
-            _nextSpawnTimer -= Time.deltaTime;
-        else
-            SpawnPotion(true);
-
-    }
-
-    private void SpawnPotion(bool shouldSpawn)
-    {
-        transform.GetChild(0).gameObject.SetActive(shouldSpawn);
-        _collider.enabled = shouldSpawn;
-    }
-
-    public override void LoadData()
-    {
-        if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
+        private void Awake()
         {
-            _potionData = SaveSystemManager.GetData(_persistentId.Value) as PotionData;
-            _nextSpawnTimer = _potionData._nextSpawnTimer;
+            RegisterForSave();
+
+            TryGetComponent<Collider>(out _collider);
         }
-        else
+
+        private void Update()
         {
-            _potionData = new()
+            if (_nextSpawnTimer > 0)
+                _nextSpawnTimer -= Time.deltaTime;
+            else
+                SpawnPotion(true);
+
+        }
+
+        private void SpawnPotion(bool shouldSpawn)
+        {
+            transform.GetChild(0).gameObject.SetActive(shouldSpawn);
+            if (_collider != null) _collider.enabled = shouldSpawn;
+        }
+
+        public override void LoadData()
+        {
+            if (SaveSystemManager.ExistData(_persistentId.Value) >= 0)
             {
-                _id = _persistentId.Value,
-                _nextSpawnTimer = _spawnTimer,
-                _healAmount = 2
-            };
-            _nextSpawnTimer = _spawnTimer;
+                _potionData = SaveSystemManager.GetData(_persistentId.Value) as PotionData;
+                _nextSpawnTimer = _potionData._nextSpawnTimer;
+            }
+            else
+            {
+                _potionData = new()
+                {
+                    _id = _persistentId.Value,
+                    _nextSpawnTimer = _spawnTimer,
+                    _healAmount = 2
+                };
+                _nextSpawnTimer = _spawnTimer;
+            }
+
         }
 
-    }
-
-    public override PureRawData SaveData()
-    {
-        SnapshotData();
-
-        return _potionData;
-    }
-
-    public override void SnapshotData()
-    {
-        _potionData.UpdateData(_nextSpawnTimer);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent<Character>(out var character))
+        public override PureRawData SaveData()
         {
-            character.Heal(_potionData._healAmount);
+            SnapshotData();
 
-            SpawnPotion(false);
-            _nextSpawnTimer = _spawnTimer;
+            return _potionData;
+        }
+
+        public override void SnapshotData() => _potionData.UpdateData(_nextSpawnTimer);
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<Character>(out var character))
+            {
+                character.Heal(_potionData._healAmount);
+
+                SpawnPotion(false);
+                _nextSpawnTimer = _spawnTimer;
+            }
         }
     }
 }
