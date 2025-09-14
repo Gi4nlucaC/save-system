@@ -25,7 +25,7 @@ namespace PizzaCompany.SaveSystem
             if (!string.IsNullOrEmpty(PersistentId))
                 SaveSystemManager.RegisterSavable(this);
             else
-                Debug.LogWarning($"{name}: PersistentId non generato. Premi 'Generate' sul campo UniqueGUID o usa il context menu.");
+                Debug.LogWarning($"{name}: PersistentId not generated. Click 'Generate' on the UniqueGUID field or use the context menu.");
         }
         public virtual PureRawData SaveData() { throw new System.NotImplementedException(); }
         public virtual void LoadData() { throw new System.NotImplementedException(); }
