@@ -11,7 +11,10 @@ public static class SaveStorage
     {
         _rootPath = String.IsNullOrEmpty(path) ? "Saves" : path;
         if (!Directory.Exists(_rootPath))
+        {
             Directory.CreateDirectory(_rootPath);
+            throw new DirectoryNotFoundException("cartella non esiste la creo");
+        }
     }
 
     public static FileInfo[] CheckSaves(string extension)

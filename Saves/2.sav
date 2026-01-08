@@ -1,0 +1,81 @@
+{
+  "$type": "SaveContainer, Assembly-CSharp",
+  "Header": {
+    "$type": "MetaData, Assembly-CSharp",
+    "SlotId": "2",
+    "PlayerName": "Gino",
+    "PlayTimeSeconds": 0.0,
+    "Day": 0,
+    "Hours": 7,
+    "Minutes": 2
+  },
+  "Data": {
+    "$type": "System.Collections.Generic.List`1[[PureRawData, Assembly-CSharp]], mscorlib",
+    "$values": [
+      {
+        "$type": "TimeDateData, Assembly-CSharp",
+        "_day": 0,
+        "_minutes": 2,
+        "_hours": 7,
+        "_id": "4d92403999be40b796a903944348dc58"
+      },
+      {
+        "$type": "EnemyData, Assembly-CSharp",
+        "_name": "Mimic",
+        "_position": {
+          "$type": "Vector3Data, Assembly-CSharp",
+          "x": 5.496461,
+          "y": 0.08000016,
+          "z": 1.76978278
+        },
+        "_rotation": {
+          "$type": "QuaternionData, Assembly-CSharp",
+          "x": 0.0,
+          "y": 0.315534532,
+          "z": 0.0,
+          "w": 0.9489141
+        },
+        "_scale": {
+          "$type": "Vector3Data, Assembly-CSharp",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "_id": "7bef0fa2f6cb484dae34a5a39e8d1571"
+      },
+      {
+        "$type": "CharacterData, Assembly-CSharp",
+        "_hp": 59,
+        "_exp": 8,
+        "_lvl": 1,
+        "_name": "Gino",
+        "_position": {
+          "$type": "Vector3Data, Assembly-CSharp",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "_rotation": {
+          "$type": "QuaternionData, Assembly-CSharp",
+          "x": 0.0,
+          "y": 1.0,
+          "z": 0.0,
+          "w": 0.0
+        },
+        "_scale": {
+          "$type": "Vector3Data, Assembly-CSharp",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        },
+        "_id": "6cba12f58293485196f1afe133b8b1f0"
+      },
+      {
+        "$type": "PotionData, Assembly-CSharp",
+        "_nextSpawnTimer": 7.33469057,
+        "_healAmount": 2,
+        "_id": "637f4e4695184fc6bec180cbbae88c39"
+      }
+    ]
+  }
+}

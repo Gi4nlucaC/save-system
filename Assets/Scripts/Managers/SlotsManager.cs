@@ -14,6 +14,8 @@ public class SlotsManager : MonoBehaviour
 
     public string LastSlotSaved => _lastSlotSaved;
 
+    public bool SaveInCloud => _saveInCloud;
+
     private void Awake()
     {
         if (_saveInCloud)
