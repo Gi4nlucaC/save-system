@@ -28,7 +28,7 @@ public class Mimic : SavableMonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<Character>(out var character))
+        if (other.TryGetComponent<Character>(out var character))
         {
             character.TakeDamage(5);
             Debug.Log("Gnam! the Mimic Bites U!");
@@ -82,7 +82,7 @@ public class Mimic : SavableMonoBehaviour
         _enemyData.UpdateData(transform.position, transform.rotation, transform.localScale);
     }
 
-    public  override void DeleteData()
+    public override void DeleteData()
     {
 
     }

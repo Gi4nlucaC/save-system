@@ -2,12 +2,12 @@
   "$type": "SaveContainer, Assembly-CSharp",
   "Header": {
     "$type": "MetaData, Assembly-CSharp",
-    "SlotId": "1",
+    "SlotId": "411474ac-d44f-4c1e-9e28-e11ef0cf5d8e",
     "PlayerName": "Gino",
     "PlayTimeSeconds": 0.0,
     "Day": 0,
     "Hours": 7,
-    "Minutes": 5
+    "Minutes": 30
   },
   "Data": {
     "$type": "System.Collections.Generic.List`1[[PureRawData, Assembly-CSharp]], mscorlib",
@@ -15,7 +15,7 @@
       {
         "$type": "TimeDateData, Assembly-CSharp",
         "_day": 0,
-        "_minutes": 5,
+        "_minutes": 30,
         "_hours": 7,
         "_id": "4d92403999be40b796a903944348dc58"
       },
@@ -24,16 +24,16 @@
         "_name": "Mimic",
         "_position": {
           "$type": "Vector3Data, Assembly-CSharp",
-          "x": 1.85714841,
+          "x": -5.254291,
           "y": 0.08000016,
-          "z": -0.3007109
+          "z": -3.09809637
         },
         "_rotation": {
           "$type": "QuaternionData, Assembly-CSharp",
           "x": 0.0,
-          "y": 0.9277336,
+          "y": 0.8736587,
           "z": 0.0,
-          "w": -0.373243123
+          "w": -0.486539245
         },
         "_scale": {
           "$type": "Vector3Data, Assembly-CSharp",
@@ -45,22 +45,22 @@
       },
       {
         "$type": "CharacterData, Assembly-CSharp",
-        "_hp": 58,
-        "_exp": 11,
+        "_hp": 49,
+        "_exp": 53,
         "_lvl": 1,
         "_name": "Gino",
         "_position": {
           "$type": "Vector3Data, Assembly-CSharp",
-          "x": -3.07753015,
+          "x": 2.14768171,
           "y": 0.08000016,
-          "z": -3.123058
+          "z": 2.59217882
         },
         "_rotation": {
           "$type": "QuaternionData, Assembly-CSharp",
           "x": 0.0,
-          "y": -0.923879564,
+          "y": 0.7071068,
           "z": 0.0,
-          "w": 0.382683456
+          "w": 0.7071068
         },
         "_scale": {
           "$type": "Vector3Data, Assembly-CSharp",
@@ -72,7 +72,7 @@
       },
       {
         "$type": "PotionData, Assembly-CSharp",
-        "_nextSpawnTimer": 4.21185637,
+        "_nextSpawnTimer": -0.00303280167,
         "_healAmount": 2,
         "_id": "637f4e4695184fc6bec180cbbae88c39"
       }

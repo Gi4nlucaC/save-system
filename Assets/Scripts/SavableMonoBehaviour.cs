@@ -31,6 +31,19 @@ public class SavableMonoBehaviour : MonoBehaviour, ISavable
             Debug.LogWarning($"{name}: PersistentId non generato. Premi 'Generate' sul campo UniqueGUID o usa il context menu.");
     }
 
+    void OnDestroy()
+    {
+        Unregister();
+    }
+
+    protected void Unregister()
+    {
+        if (!string.IsNullOrEmpty(PersistentId))
+            SaveSystemManager.UnregisterSavable(this);
+        else
+            Debug.LogWarning($"{name}: PersistentId non generato. Premi 'Generate' sul campo UniqueGUID o usa il context menu.");
+    }
+
     public virtual PureRawData SaveData()
     {
         throw new System.NotImplementedException();

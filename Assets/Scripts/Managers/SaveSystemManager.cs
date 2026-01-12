@@ -61,11 +61,12 @@ public static class SaveSystemManager
 
     public static void OnSaveData(string slotId)
     {
+        var guid = slotId == "AUTOSAVE" ? slotId : Guid.NewGuid().ToString();
 
         List<PureRawData> allData = new();
         MetaData header = new()
         {
-            SlotId = slotId,
+            SlotId = guid,
             PlayerName = "Unknown",
             PlayTimeSeconds = 0,
             Day = Days.Monday,
@@ -89,16 +90,16 @@ public static class SaveSystemManager
 
         if (_saveInCloud)
         {
-            CloudSave.SaveDataAsBinary(slotId,
+            CloudSave.SaveDataAsBinary(guid,
                 DataSerializer.ToByteArray<MetaData>(header),
                 DataSerializer.ToByteArray<List<PureRawData>>(allData));
         }
         else
         {
             if (_serializationMode == SerializationMode.Json)
-                SaveStorage.WriteJsonWithHeader(slotId, header, allData);
+                SaveStorage.WriteJsonWithHeader(guid, header, allData);
             else
-                SaveStorage.WriteBinariesWithHeader(slotId, header, allData);
+                SaveStorage.WriteBinariesWithHeader(guid, header, allData);
         }
 
         OnGameSavedManually?.Invoke();
@@ -150,7 +151,14 @@ public static class SaveSystemManager
 
     public static void DeleteData(string id)
     {
+        var indexToDelete = ExistData(id);
+        if (indexToDelete >= 0)
+            _savedEntities.RemoveAt(indexToDelete);
 
+        if (_serializationMode == SerializationMode.Json)
+            SaveStorage.Delete(id, "sav");
+        else
+            SaveStorage.Delete(id, "bin");
     }
 
     public static void AutoSave(string id)

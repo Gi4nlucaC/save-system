@@ -55,21 +55,21 @@ public class UIManager : MonoBehaviour
 
     public void OnSavedSlotMenuCloseClicked()
     {
-        SaveSystemManager.OnGameSavedManually -= OnGameSavedSucessfully;
-        SaveSystemManager.OnGameSavedManually -= OnSaveAndQuitSucessfully;
+        SaveSystemManager.OnGameSavedManually -= OnGameSavedSuccessfully;
+        SaveSystemManager.OnGameSavedManually -= OnSaveAndQuitSuccessfully;
 
         _savedSlotsPanel.ToggleVisibility();
     }
 
     public void OnSaveButtonClicked()
     {
-        SaveSystemManager.OnGameSavedManually += OnGameSavedSucessfully;
+        SaveSystemManager.OnGameSavedManually += OnGameSavedSuccessfully;
         _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
         _savedSlotsPanel.ToggleVisibility();
 
     }
 
-    public void OnGameSavedSucessfully()
+    public void OnGameSavedSuccessfully()
     {
         _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
         ShowMessage("Game Saved!");
@@ -77,29 +77,30 @@ public class UIManager : MonoBehaviour
 
     public void OnSaveAndQuitButtonClicked()
     {
-        SaveSystemManager.OnGameSavedManually += OnSaveAndQuitSucessfully;
+        SaveSystemManager.OnGameSavedManually += OnSaveAndQuitSuccessfully;
         _savedSlotsPanel.RefreshList(UISlotsStates.OVERWRITE);
         _savedSlotsPanel.ToggleVisibility();
 
     }
 
-    void OnSaveAndQuitSucessfully()
+    void OnSaveAndQuitSuccessfully()
     {
         ShowMessage("Game Saved. Quitting...");
         SaveSystemManager.OnResetGame();
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
 
     public void OnLoadButtonClicked()
     {
-        SaveSystemManager.OnAllSavablesLoaded += OnGameLoadedSucessfully;
+        SaveSystemManager.OnAllSavablesLoaded += OnGameLoadedSuccessfully;
         _savedSlotsPanel.RefreshList(UISlotsStates.LOAD);
         _savedSlotsPanel.ToggleVisibility();
     }
 
-    void OnGameLoadedSucessfully()
+    void OnGameLoadedSuccessfully()
     {
-        SaveSystemManager.OnAllSavablesLoaded -= OnGameLoadedSucessfully;
+        SaveSystemManager.OnAllSavablesLoaded -= OnGameLoadedSuccessfully;
         Time.timeScale = 1;
     }
 
@@ -107,6 +108,7 @@ public class UIManager : MonoBehaviour
     {
         ShowMessage("Quitting Game...");
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
 
     void ShowMessage(string message)
