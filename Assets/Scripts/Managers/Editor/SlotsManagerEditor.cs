@@ -23,8 +23,6 @@ public class SlotsManagerEditor : Editor
         _username = serializedObject.FindProperty("_username");
         _password = serializedObject.FindProperty("_password");
         _clusterName = serializedObject.FindProperty("_clusterName");
-
-        //GenerateGUIDIfNeeded();
     }
 
     public override void OnInspectorGUI()
@@ -49,27 +47,6 @@ public class SlotsManagerEditor : Editor
         EditorGUILayout.PropertyField(_folderName);
 
         serializedObject.ApplyModifiedProperties();
-
-        // Garantisce sempre che l’ID sia valido
-        //GenerateGUIDIfNeeded();
     }
 
-    /* private void GenerateGUIDIfNeeded()
-    {
-        if (_userId != null && _userId.objectReferenceValue is UniqueGUID guid)
-        {
-            if (!guid.IsValid)
-            {
-                guid.Set(System.Guid.NewGuid().ToString("N"));
-                EditorUtility.SetDirty(guid);
-            }
-        }
-        else if (_userId != null && _userId.objectReferenceValue == null)
-        {
-            var newGuid = new UniqueGUID();
-            newGuid.Set(System.Guid.NewGuid().ToString("N"));
-            _userId.objectReferenceValue = newGuid;
-            EditorUtility.SetDirty(target);
-        }
-    } */
 }

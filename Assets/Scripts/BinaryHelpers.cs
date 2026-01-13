@@ -28,18 +28,4 @@ public static class BinaryHelpers
     {
         return new QuaternionData(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
     }
-
-    /* // ---- QuaternionData ----
-    public static void WriteQuaternion(this BinaryWriter writer, QuaternionData q)
-    {
-        writer.Write(q.x);
-        writer.Write(q.y);
-        writer.Write(q.z);
-        writer.Write(q.w);
-    }
-
-    public static QuaternionData ReadQuaternion(this BinaryReader reader)
-    {
-        return new QuaternionData(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-    } */
 }

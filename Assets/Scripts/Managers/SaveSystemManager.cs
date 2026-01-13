@@ -239,6 +239,7 @@ public static class SaveSystemManager
 
         return $"{meta.Day} - {meta.Hours:D2}:{meta.Minutes:D2}";
     }
+
     public static string FormatPlayTime(double playTimeSeconds)
     {
         var ts = TimeSpan.FromSeconds(playTimeSeconds);
