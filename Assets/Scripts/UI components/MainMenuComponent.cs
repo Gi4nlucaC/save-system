@@ -25,7 +25,6 @@ public class MainMenuComponent : MonoBehaviour
         _loadGameButton.onClick.AddListener(OnLoadGameButtonClicked);
         _deleteSaveSlotButton.onClick.AddListener(OnDeleteSaveSlotButtonClicked);
         _backToMenuButton.onClick.AddListener(OnBackToMenuButtonClicked);
-        //_continueButton.gameObject.SetActive(false);
     }
 
     void Start()
@@ -36,14 +35,12 @@ public class MainMenuComponent : MonoBehaviour
     public void Bootstrap()
     {
         //get the files first from the cloud
-        if (!String.IsNullOrEmpty(_slotManager.LastSlotSaved))//todo: if there's a save slot
+        if (!String.IsNullOrEmpty(_slotManager.LastSlotSaved))
         {
             _continueButton.onClick.AddListener(OnContinueButtonClicked);
             _continueButton.gameObject.SetActive(true);
         }
-
     }
-
 
     void OnContinueButtonClicked()
     {

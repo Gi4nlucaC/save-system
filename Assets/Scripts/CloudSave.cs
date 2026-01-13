@@ -13,7 +13,7 @@ public static class CloudSave
 
     public static List<CloudData> CloudDatas => _cloudDatas;
 
-    public static void Init(string username = "cloudsavesystem", string password = "vqppphJRNpG2vEIR", string clusterName = "modulicluster.h6cfk1e", string userId = "")
+    public static void Init(string username = "", string password = "", string clusterName = "", string userId = "")
     {
         var client = new MongoClient($"mongodb+srv://{username}:{password}@{clusterName}.mongodb.net/");
         _database = client.GetDatabase("SaveSystem");
@@ -45,12 +45,6 @@ public static class CloudSave
         var sortDefinition = Builders<BsonDocument>.Sort.Ascending("_id");
         var docs = collection.Find(new BsonDocument()).Sort(sortDefinition).ToList();
 
-        /* BsonDocument doc = docs[slotId];
-        // Converto Bson -> JSON string
-        string json = doc.ToJson(); */
-
-        // Deserializzo in oggetto C#
-        //return DataSerializer.Deserialize<List<CloudData>>(docs.ToJson());
         return docs;
     }
 
